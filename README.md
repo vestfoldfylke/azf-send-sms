@@ -20,7 +20,7 @@ POST json to function.
 ```
 
 ```
-$ curl https://azf-send-sms.azurewebsites.net/ -d "{ "receivers": ["4745678912"], "message": "Do you read me?" }" -H "Content-Type: application/json" -v
+$ curl https://<api-url>.no/api/SendSms -d "{ "receivers": ["4745678912"], "message": "Do you read me?" }" -H "Content-Type: application/json" -H "x-functions-key: <your-api-key>" -v
 ```
 
 ## Deploy
