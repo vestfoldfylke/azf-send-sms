@@ -7,13 +7,13 @@
     "sms",
     "pswincom"
   ],
-  "homepage": "https://github.com/vtfk/azf-send-sms#readme",
+  "homepage": "https://github.com/vestfoldfylke/azf-send-sms#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vtfk/azf-send-sms.git"
+    "url": "git+https://github.com/vestfoldfylke/azf-send-sms.git"
   },
   "bugs": {
-    "url": "https://github.com/vtfk/azf-send-sms/issues"
+    "url": "https://github.com/vestfoldfylke/azf-send-sms/issues"
   },
   "license": "MIT",
   "author": {

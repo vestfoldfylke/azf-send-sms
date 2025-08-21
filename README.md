@@ -45,7 +45,7 @@ Configuration for app (Application settings):
 {
   "PSWIN_USERNAME": "username",
   "PSWIN_PASSWORD": "password",
-  "DEFAULT_SENDER": "VTFK"
+  "DEFAULT_SENDER": "VFK"
 }
 ```
 
@@ -66,7 +66,7 @@ Configuration for app (Application settings):
         "FUNCTIONS_WORKER_RUNTIME": "node",
         "PSWIN_USERNAME": "username",
         "PSWIN_PASSWORD": "password",
-        "DEFAULT_SENDER": "VTFK"
+        "DEFAULT_SENDER": "VFK"
       }
     }
     ```

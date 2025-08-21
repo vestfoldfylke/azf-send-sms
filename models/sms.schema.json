@@ -42,7 +42,7 @@
       "title": "Sender name",
       "default": "",
       "examples": [
-        "VTFK"
+        "VFK"
       ],
       "pattern": "^(.*)$"
     },

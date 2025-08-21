@@ -10,7 +10,7 @@ module.exports = async function (context, request) {
     context.res = {
       status: 400,
       body: {
-        message: 'One or more field has invalid data, please see usage here: https://github.com/vtfk/azf-send-sms',
+        message: 'One or more field has invalid data, please see usage here: https://github.com/vestfoldfylke/azf-send-sms',
         errors: validation.errors
       }
     }
