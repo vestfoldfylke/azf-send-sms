@@ -29,6 +29,7 @@
     "refresh": "rm -rf node_modules && rm package-lock.json && npm install"
   },
   "dependencies": {
+    "@vtfk/logger": "^6.3.4",
     "ajv": "^6.10.2",
     "pswincom-gateway": "^1.4.0"
   },
