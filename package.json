@@ -7,6 +7,8 @@
     "sms",
     "pswincom"
   ],
+  "type": "module",
+  "main": "dist/src/functions/*.js",
   "homepage": "https://github.com/vestfoldfylke/azf-send-sms#readme",
   "repository": {
     "type": "git",
@@ -21,17 +23,29 @@
     "email": "rune.moskvil.lyngas@vestfoldfylke.no",
     "url": "https://github.com/runely"
   },
-  "main": "SendSMS/index.js",
   "scripts": {
-    "test": "standard",
-    "standard-fix": "standard --fix",
-    "refresh": "rm -rf node_modules && rm package-lock.json && npm i"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "build": "tsc --project tsconfig.json",
+    "watch": "tsc -w",
+    "clean": "rm -rf dist",
+    "prestart": "npm run clean && npm run build",
+    "start": "func start",
+    "test": "npm run lint && node --import tsx --test tests/**/*.test.ts"
   },
   "dependencies": {
+    "@azure/functions": "^4.8.0",
     "@vtfk/logger": "^6.3.4",
-    "ajv": "^8.17.1"
+    "ajv": "^8.17.1",
+    "source-map-support": "^0.5.21"
   },
   "devDependencies": {
-    "standard": "^17.1.2"
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.5.2",
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
+    "@typescript-eslint/parser": "^8.44.0",
+    "eslint": "^9.35.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
   }
 }
