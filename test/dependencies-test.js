@@ -15,7 +15,7 @@ if (Object.keys(dependencies).filter(isDropped).length > 0) {
     })
   })
 } else {
-  test('no dependecies to test', t => {
+  test('no dependencies to test', t => {
     t.truthy(true)
   })
 }
@@ -28,7 +28,7 @@ if (Object.keys(devDependencies).filter(isDropped).length > 0) {
     })
   })
 } else {
-  test('no devDependecies to test', t => {
+  test('no devDependencies to test', t => {
     t.truthy(true)
   })
 }
