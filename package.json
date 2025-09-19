@@ -37,6 +37,7 @@
     "@azure/functions": "^4.8.0",
     "@vtfk/logger": "^6.3.4",
     "ajv": "^8.17.1",
+    "fluentvalidation-ts": "^5.0.0",
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
