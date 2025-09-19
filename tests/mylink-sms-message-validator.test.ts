@@ -1,15 +1,15 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
 
-import { MessageCallbackMode, MessagePriority, SmsMessage, SmsMessageEncoding, SmsMessageObfuscateOptions } from '../types/mylink-sms-message'
+import { MessageCallbackMode, MessagePriority, MyLinkSmsMessage, SmsMessageEncoding, SmsMessageObfuscateOptions } from '../types/mylink-sms-message'
 
-import { SmsMessageValidator } from '../src/validation/sms-message-validator'
+import { MyLinkSmsMessageValidator } from '../src/validation/mylink-sms-message-validator'
 
-const validator = new SmsMessageValidator()
+const validator = new MyLinkSmsMessageValidator()
 
-describe('SmsMessageValidator should not return errors for valid SmsMessage', () => {
-  it('when 4 SmsMessage items should be sent immediately', () => {
-    const messages: SmsMessage[] = [
+describe('MyLinkSmsMessageValidator should not return errors for valid MyLinkSmsMessage', () => {
+  it('when 4 MyLinkSmsMessage items should be sent immediately', () => {
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+4781549300',
         content: {
@@ -96,8 +96,8 @@ describe('SmsMessageValidator should not return errors for valid SmsMessage', ()
     assert.ok(true)
   })
 
-  it('when 2 SmsMessage items should be sent later', () => {
-    const messages: SmsMessage[] = [
+  it('when 2 MyLinkSmsMessage items should be sent later', () => {
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+4781549300',
         content: {
@@ -143,9 +143,9 @@ describe('SmsMessageValidator should not return errors for valid SmsMessage', ()
   })
 })
 
-describe('SmsMessageValidator should return errors for invalid SmsMessage', () => {
+describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMessage', () => {
   it('when recipient is empty', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '',
         content: {
@@ -169,7 +169,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it("when recipient doesn't start with '+'", () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '81548300',
         content: {
@@ -193,7 +193,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when content.text is empty', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -217,7 +217,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when content.text is empty', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -241,7 +241,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when content.options."sms.encoding" is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -265,7 +265,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when content.options."sms.sender" is empty', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -289,7 +289,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when content.options."sms.sender" is more than 15 digits', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -313,7 +313,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when content.options."sms.sender" is more than 11 alphanumeric characters', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -338,7 +338,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when content.options."sms.obfuscate" is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -362,7 +362,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when schedule.relative is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -389,7 +389,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when schedule.relative is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -416,7 +416,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when schedule.absolute is invalid date', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -443,7 +443,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when schedule.absolute is empty', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -470,7 +470,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when schedule.relative and schedule.absolute is missing', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -497,7 +497,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when schedule.tag is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -526,7 +526,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
 
   // TODO: Check this live when we have a system that supports it
   /*it('when schedule.tag is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -555,7 +555,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })*/
 
   it('when expiration.relative is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -582,7 +582,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when expiration.relative is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -609,7 +609,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when expiration.absolute is empty', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -636,7 +636,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when expiration.absolute is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -663,7 +663,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when callback.mode is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -690,7 +690,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when callback.mode is URL but urls is null', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -718,7 +718,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when callback.mode is URL but urls are empty', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -746,7 +746,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when callback.mode is Gate but gateId is null', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -774,7 +774,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when callback.mode is Gate but gateId is empty', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -802,7 +802,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when callback.ttl invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -830,7 +830,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when referenceId is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {
@@ -841,7 +841,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
             'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
-        referenceId: 'Dette er en svada tekst som er laget for å overstige 500 tegn. Den inneholder mange ord, setninger og uttrykk som egentlig ikke har noen spesiell mening, men som er ment å fylle opp plassen slik at vi kan teste valideringen av referenceId-feltet i SmsMessageValidator. Her kan vi skrive om alt mulig rart, som for eksempel at rumpeloen danser rundt i stua mens han tenker på hvor mange tegn denne teksten egentlig har blitt, og om det er nok til å passere grensen på 500 tegn. Kanskje han også vurderer å telle bokstavene manuelt, men det ville vært en tidkrevende prosess, så han stoler heller på at denne teksten er lang nok. Hvis ikke, kan vi alltids legge til flere ord, flere setninger, og kanskje til og med noen ekstra kommaer og punktum for å være helt sikre. Nå nærmer vi oss slutten, og forhåpentligvis har vi nådd målet om over 500 tegn!'
+        referenceId: 'Dette er en svada tekst som er laget for å overstige 500 tegn. Den inneholder mange ord, setninger og uttrykk som egentlig ikke har noen spesiell mening, men som er ment å fylle opp plassen slik at vi kan teste valideringen av referenceId-feltet i MyLinkSmsMessageValidator. Her kan vi skrive om alt mulig rart, som for eksempel at rumpeloen danser rundt i stua mens han tenker på hvor mange tegn denne teksten egentlig har blitt, og om det er nok til å passere grensen på 500 tegn. Kanskje han også vurderer å telle bokstavene manuelt, men det ville vært en tidkrevende prosess, så han stoler heller på at denne teksten er lang nok. Hvis ikke, kan vi alltids legge til flere ord, flere setninger, og kanskje til og med noen ekstra kommaer og punktum for å være helt sikre. Nå nærmer vi oss slutten, og forhåpentligvis har vi nådd målet om over 500 tegn!'
       }
     ]
 
@@ -855,7 +855,7 @@ describe('SmsMessageValidator should return errors for invalid SmsMessage', () =
   })
 
   it('when priority is invalid', () => {
-    const messages: SmsMessage[] = [
+    const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
         content: {

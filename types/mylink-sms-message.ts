@@ -1,7 +1,7 @@
 /**
  * Represents an SMS message
  */
-export type SmsMessage = {
+export type MyLinkSmsMessage = {
   /**
    * Recipient must be provided in MSISDN format. Remember that MSISDN must have a leading (+)<br />
    * Example: +4781549300

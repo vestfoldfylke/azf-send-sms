@@ -3,27 +3,27 @@ import {
   MessageCallback, MessageCallbackMode,
   MessageExpiration, MessagePriority,
   MessageSchedule,
-  SmsMessage,
+  MyLinkSmsMessage,
   SmsMessageContent,
   SmsMessageEncoding,
   SmsMessageObfuscateOptions,
   SmsMessageOptions
-} from '../../types/mylink-sms-message'
+} from '../../types/mylink-sms-message.js'
 
-export class SmsMessageValidator extends Validator<SmsMessage> {
+export class MyLinkSmsMessageValidator extends Validator<MyLinkSmsMessage> {
   constructor() {
     super()
     
     this.ruleFor('recipient')
       .notNull()
       .notEmpty()
-      .withMessage('recipient is required')
+      .withMessage('is required')
       .matches(/^\+.*$/)
       .withMessage('must be in MSISDN format (start with + and country code)')
     
     this.ruleFor('content')
       .notNull()
-      .withMessage('content is required')
+      .withMessage('is required')
       .must(content => content as SmsMessageContent !== undefined)
       .withMessage('must be of type SmsMessageContent')
       .setValidator(() => new SmsMessageContentValidator())
@@ -67,13 +67,13 @@ class SmsMessageContentValidator extends Validator<SmsMessageContent> {
     this.ruleFor('text')
       .notNull()
       .notEmpty()
-      .withMessage('content.text is required')
+      .withMessage('is required')
       .maxLength(38862)
       .withMessage('must be greater than or equal to 0 and less than or equal to 38862 characters')
     
     this.ruleFor('options')
       .notNull()
-      .withMessage('content.options is required')
+      .withMessage('is required')
       .setValidator(() => new SmsMessageOptionsValidator())
   }
 }
@@ -89,13 +89,13 @@ class SmsMessageOptionsValidator extends Validator<SmsMessageOptions> {
     this.ruleFor('sms.sender')
       .notNull()
       .notEmpty()
-      .withMessage('content.options."sms.sender" is required')
+      .withMessage('is required')
       .matches(/^(\+?[0-9]{1,15}|[A-Za-z0-9\s+\-\/'"!#%&()*.?><;]{1,11})$/)
       .withMessage('must be alphanumeric (max 11 characters) or numeric (max 15 digits, can start with +)')
 
     this.ruleFor('sms.obfuscate')
       .notEmpty()
-      .withMessage('content.options."sms.obfuscate" is required')
+      .withMessage('is required')
       .when(v => v['sms.obfuscate'] !== undefined && v['sms.obfuscate'] !== null)
       .must(obfuscate => Object.values(SmsMessageObfuscateOptions).includes(obfuscate))
       .withMessage(`must be one of: ${Object.values(SmsMessageObfuscateOptions).join(', ')}`)
@@ -157,7 +157,7 @@ class MessageCallbackValidator extends Validator<MessageCallback> {
 
     this.ruleFor('mode')
       .notEmpty()
-      .withMessage('callback.mode is required')
+      .withMessage('is required')
       .when(v => v.mode !== undefined && v.mode !== null)
       .must(mode => Object.values(MessageCallbackMode).includes(mode))
       .withMessage(`must be one of: ${Object.values(MessageCallbackMode).join(', ')}`)
@@ -166,13 +166,13 @@ class MessageCallbackValidator extends Validator<MessageCallback> {
     this.ruleFor('urls')
       .notNull()
       .must(urls => Array.isArray(urls) && (urls as string[]).length > 0)
-      .withMessage('callback.urls is required when mode is URL')
+      .withMessage('is required when mode is URL')
       .when(v => (v as MessageCallback).mode === MessageCallbackMode.URL)
     
     this.ruleFor('gateId')
       .notNull()
       .notEmpty()
-      .withMessage('callback.gateId is required when mode is Gate')
+      .withMessage('is required when mode is Gate')
       .when(v => (v as MessageCallback).mode === MessageCallbackMode.Gate)
     
     this.ruleFor('ttl')
