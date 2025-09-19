@@ -43,12 +43,12 @@ POST json to function.
 > `message` - **Required**<br />
 > `sender` - *Optional* - default is set in environment variable `DEFAULT_SENDER`<br />
 > `referenceId` - *Optional* - your own reference id for tracking<br />
-> `scheduleIn` - *Optional* - milliseconds in the future to schedule the SMS<br />
-> `scheduleAt` - *Optional* - ISO8601 date time string in UTC to schedule the SMS
+> `scheduledIn` - *Optional* - milliseconds in the future to schedule the SMS<br />
+> `scheduledAt` - *Optional* - ISO8601 date time string in UTC to schedule the SMS
 
 > [!IMPORTANT]
-> Use either `scheduleIn` or `scheduleAt` to schedule the SMS.<br />
-> If both are provided, `scheduleAt` will be used.
+> Use either `scheduledIn` or `scheduledAt` to schedule the SMS.<br />
+> If both are provided, `scheduledAt` will be used.
 
 ```
 $ curl https://<api-url>.no/api/SendSms -d "{ "receivers": ["4745678912"], "message": "Do you read me?", "referenceId": "<your-reference-id>", "scheduledAt": "2025-09-19T16:00:00Z" }" -H "Content-Type: application/json" -H "x-functions-key: <your-api-key>" -v
