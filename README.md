@@ -47,7 +47,7 @@ POST json to function.
 > `scheduleAt` - *Optional* - ISO8601 date time string in UTC to schedule the SMS
 
 > [!IMPORTANT]
-> NOTE: Use either `scheduleIn` or `scheduleAt` to schedule the SMS.<br />
+> Use either `scheduleIn` or `scheduleAt` to schedule the SMS.<br />
 > If both are provided, `scheduleAt` will be used.
 
 ```
