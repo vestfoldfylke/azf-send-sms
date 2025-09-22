@@ -329,7 +329,6 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
 
     for (const message of messages) {
       const errors = validator.validate(message)
-      console.log(errors)
       // NOTE: This will only validate that there are errors, not the exact number of errors
       assert.ok(Object.keys(errors).length === 1, `Expected validation errors but got: ${JSON.stringify(errors)}`)
     }

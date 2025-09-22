@@ -62,6 +62,7 @@ Create a `local.settings.json` file:
   "IsEncrypted": false,
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "node",
+    "MYLINK_BASEURL": "https://api.linkmobility.com/sms/v1",
     "DEFAULT_SENDER": "VFK"
   }
 }
