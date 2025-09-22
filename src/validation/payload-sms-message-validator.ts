@@ -6,7 +6,9 @@ export class PayloadSmsMessageValidator extends Validator<PayloadSmsMessage> {
     super()
     
     this.ruleFor('receivers')
-      .must(receivers => receivers.length > 0 && receivers.every(r => typeof r === 'string'))
+      .must(receivers => receivers.length > 0 && receivers.length <= 1000)
+      .withMessage('must contain between 1 and 1000 receivers')
+      .must(receivers => receivers.every(r => typeof r === 'string'))
       .withMessage('must be an array of strings only')
     
     this.ruleFor('message')
