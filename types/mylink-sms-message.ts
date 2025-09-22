@@ -7,10 +7,10 @@ export type MyLinkSmsMessage = {
    * Example: +4781549300
    */
   recipient: string
-  content: SmsMessageContent
-  schedule?: MessageSchedule
-  expiration?: MessageExpiration
-  callback?: MessageCallback
+  content: MyLinkSmsMessageContent
+  schedule?: MyLinkMessageSchedule
+  expiration?: MyLinkMessageExpiration
+  callback?: MyLinkMessageCallback
   /**
    * Your own internal reference/transaction ID (<= 500 characters). Not used for anything except as a reference
    */
@@ -18,13 +18,13 @@ export type MyLinkSmsMessage = {
   /**
    * Set priority on your own message. Priority only affects your own queue
    */
-  priority?: MessagePriority
+  priority?: MyLinkMessagePriority
 }
 
 /**
  * Represents the content of an SMS message
  */
-export type SmsMessageContent = {
+export type MyLinkSmsMessageContent = {
   /**
    * A single message can be 160 characters (GSM encoding). If message exceeds 160 characters each message part will be split into 153 characters.<br />
    * Maximum length of a message is dependent on the operator you are sending towards. UCS2 encoding: 70/67 characters single/multipart.<br />
@@ -32,14 +32,14 @@ export type SmsMessageContent = {
    * Maximum length: 38862 characters
    */
   text: string
-  options: SmsMessageOptions
+  options: MyLinkSmsMessageOptions
 }
 
 /**
  * Represents options for sending an SMS message
  */
-export type SmsMessageOptions = {
-  'sms.encoding': SmsMessageEncoding
+export type MyLinkSmsMessageOptions = {
+  'sms.encoding': MyLinkSmsMessageEncoding
   /**
    * SenderID of the message. Can be numeric (max 15 digits, can start with +) or alphanumeric (max 11 characters)
    */
@@ -47,13 +47,13 @@ export type SmsMessageOptions = {
   /**
    * Obfuscation allows you to anonymize content and recipient or content only after the message is processed. Non-retrievable
    */
-  'sms.obfuscate': SmsMessageObfuscateOptions
+  'sms.obfuscate': MyLinkSmsMessageObfuscateOptions
 }
 
 /**
  * Represents the encoding of an SMS message
  */
-export enum SmsMessageEncoding {
+export enum MyLinkSmsMessageEncoding {
   AutoDetect = 'AutoDetect',
   GSM = 'GSM',
   UCS2 = 'UCS2'
@@ -62,12 +62,12 @@ export enum SmsMessageEncoding {
 /**
  * Represents obfuscation options for an SMS message
  */
-export enum SmsMessageObfuscateOptions {
+export enum MyLinkSmsMessageObfuscateOptions {
   ContentAndRecipient = 'ContentAndRecipient',
   Content = 'Content'
 }
 
-export type MessageSchedule = {
+export type MyLinkMessageSchedule = {
   /**
    * Time specified in milliseconds of how much we will offset the message in the future. The maximum value is 3 months (7_889_232_000 milliseconds), which is also the default
    */
@@ -82,7 +82,7 @@ export type MessageSchedule = {
   tag?: string | null
 }
 
-export type MessageExpiration = {
+export type MyLinkMessageExpiration = {
   /**
    * Time specified in milliseconds of how long the message is supposed to live. The maximum value is 48 hours (172800000 milliseconds), which is also the default
    */
@@ -118,7 +118,7 @@ export type MessageExpiration = {
  * }
  * ```
  */
-export type MessageCallback = {
+export type MyLinkMessageCallback = {
   /**
    * Choose how you want to receive your Delivery reports:<br />
    * Profile sends any DLRs towards your default configuration in MyLINK portal<br />
@@ -127,7 +127,7 @@ export type MessageCallback = {
    * None (no DLR is sent anywhere).<br /><br />
    * Each mode requires different request parameters, refer to the fields below
    */
-  mode?: MessageCallbackMode
+  mode?: MyLinkMessageCallbackMode
   /**
    * List of URLs to receive DLRs on. Mandatory when using mode "URL" - not relevant to any other modes
    */
@@ -145,7 +145,7 @@ export type MessageCallback = {
   ttl?: number
 }
 
-export enum MessageCallbackMode {
+export enum MyLinkMessageCallbackMode {
   /**
    * Profile sends any DLRs towards your default configuration in MyLINK portal
    */
@@ -164,7 +164,7 @@ export enum MessageCallbackMode {
   None = 'None'
 }
 
-export enum MessagePriority {
+export enum MyLinkMessagePriority {
   Normal = 'Normal',
   High = 'High',
   Low = 'Low'

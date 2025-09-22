@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
 
-import { MessageCallbackMode, MessagePriority, MyLinkSmsMessage, SmsMessageEncoding, SmsMessageObfuscateOptions } from '../types/mylink-sms-message'
+import { MyLinkMessageCallbackMode, MyLinkMessagePriority, MyLinkSmsMessage, MyLinkSmsMessageEncoding, MyLinkSmsMessageObfuscateOptions } from '../types/mylink-sms-message'
 
 import { MyLinkSmsMessageValidator } from '../src/validation/mylink-sms-message-validator'
 
@@ -15,75 +15,75 @@ describe('MyLinkSmsMessageValidator should not return errors for valid MyLinkSms
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         expiration: {
           relative: 24 * 60 * 60 * 1000 // 24 hours in milliseconds
         },
         callback: {
-          mode: MessageCallbackMode.Profile
+          mode: MyLinkMessageCallbackMode.Profile
         },
         referenceId: 'ref-12345',
-        priority: MessagePriority.Normal
+        priority: MyLinkMessagePriority.Normal
       },
       {
         recipient: '+4781549301',
         content: {
           text: 'Hello, this is a second test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo 2',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         expiration: {
           absolute: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours in the future
         },
         callback: {
-          mode: MessageCallbackMode.URL,
+          mode: MyLinkMessageCallbackMode.URL,
           urls: ['https://my.callback.url/endpoint']
         },
         referenceId: 'ref-123456',
-        priority: MessagePriority.High
+        priority: MyLinkMessagePriority.High
       },
       {
         recipient: '+4781549302',
         content: {
           text: 'Hello, this is a third test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo 3',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         expiration: {
           relative: 24 * 60 * 60 * 1000 // 24 hours in milliseconds
         },
         callback: {
-          mode: MessageCallbackMode.Gate,
+          mode: MyLinkMessageCallbackMode.Gate,
           gateId: 'callbackId'
         },
         referenceId: 'ref-123456',
-        priority: MessagePriority.Low
+        priority: MyLinkMessagePriority.Low
       },
       {
         recipient: '+4781549303',
         content: {
           text: 'Hello, this is a fourth test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo 4',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         expiration: {
           absolute: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours in the future
         },
         callback: {
-          mode: MessageCallbackMode.None
+          mode: MyLinkMessageCallbackMode.None
         }
       }
     ]
@@ -103,9 +103,9 @@ describe('MyLinkSmsMessageValidator should not return errors for valid MyLinkSms
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         schedule: {
@@ -113,16 +113,16 @@ describe('MyLinkSmsMessageValidator should not return errors for valid MyLinkSms
           tag: 'test-schedule'
         },
         referenceId: 'ref-12345',
-        priority: MessagePriority.Normal
+        priority: MyLinkMessagePriority.Normal
       },
       {
         recipient: '+4781549301',
         content: {
           text: 'Hello, this is second test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo 2',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         schedule: {
@@ -130,7 +130,7 @@ describe('MyLinkSmsMessageValidator should not return errors for valid MyLinkSms
           tag: 'test-schedule'
         },
         referenceId: 'ref-123456',
-        priority: MessagePriority.Normal
+        priority: MyLinkMessagePriority.Normal
       }
     ]
 
@@ -151,9 +151,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         }
       }
@@ -175,9 +175,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         }
       }
@@ -199,9 +199,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: '',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         }
       }
@@ -223,9 +223,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: '',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         }
       }
@@ -247,9 +247,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': 'Test' as SmsMessageEncoding,
+            'sms.encoding': 'Test' as MyLinkSmsMessageEncoding,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         }
       }
@@ -271,9 +271,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: '',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': '',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         }
       }
@@ -295,9 +295,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': '1234567898765432',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         }
       }
@@ -319,9 +319,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'hello4567129',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         }
       }
@@ -343,9 +343,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': 'Test' as SmsMessageObfuscateOptions
+            'sms.obfuscate': 'Test' as MyLinkSmsMessageObfuscateOptions
           }
         }
       }
@@ -367,9 +367,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         schedule: {
@@ -394,9 +394,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         schedule: {
@@ -421,9 +421,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         schedule: {
@@ -448,9 +448,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         schedule: {
@@ -475,9 +475,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         schedule: {
@@ -502,9 +502,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         schedule: {
@@ -531,9 +531,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         schedule: {
@@ -560,9 +560,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         expiration: {
@@ -587,9 +587,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         expiration: {
@@ -614,9 +614,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         expiration: {
@@ -641,9 +641,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         expiration: {
@@ -668,13 +668,13 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         callback: {
-          mode: 'Test' as MessageCallbackMode
+          mode: 'Test' as MyLinkMessageCallbackMode
         }
       }
     ]
@@ -695,13 +695,13 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         callback: {
-          mode: MessageCallbackMode.URL,
+          mode: MyLinkMessageCallbackMode.URL,
           urls: null
         }
       }
@@ -723,13 +723,13 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         callback: {
-          mode: MessageCallbackMode.URL,
+          mode: MyLinkMessageCallbackMode.URL,
           urls: []
         }
       }
@@ -751,13 +751,13 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         callback: {
-          mode: MessageCallbackMode.Gate,
+          mode: MyLinkMessageCallbackMode.Gate,
           gateId: null
         }
       }
@@ -779,13 +779,13 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         callback: {
-          mode: MessageCallbackMode.Gate,
+          mode: MyLinkMessageCallbackMode.Gate,
           gateId: ''
         }
       }
@@ -807,13 +807,13 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         callback: {
-          mode: MessageCallbackMode.Profile,
+          mode: MyLinkMessageCallbackMode.Profile,
           ttl: 28800001
         }
       }
@@ -835,9 +835,9 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
         referenceId: 'Dette er en svada tekst som er laget for å overstige 500 tegn. Den inneholder mange ord, setninger og uttrykk som egentlig ikke har noen spesiell mening, men som er ment å fylle opp plassen slik at vi kan teste valideringen av referenceId-feltet i MyLinkSmsMessageValidator. Her kan vi skrive om alt mulig rart, som for eksempel at rumpeloen danser rundt i stua mens han tenker på hvor mange tegn denne teksten egentlig har blitt, og om det er nok til å passere grensen på 500 tegn. Kanskje han også vurderer å telle bokstavene manuelt, men det ville vært en tidkrevende prosess, så han stoler heller på at denne teksten er lang nok. Hvis ikke, kan vi alltids legge til flere ord, flere setninger, og kanskje til og med noen ekstra kommaer og punktum for å være helt sikre. Nå nærmer vi oss slutten, og forhåpentligvis har vi nådd målet om over 500 tegn!'
@@ -860,12 +860,12 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         content: {
           text: 'Hello, this is a test message',
           options: {
-            'sms.encoding': SmsMessageEncoding.GSM,
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
-            'sms.obfuscate': SmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
           }
         },
-        priority: 'Test' as MessagePriority
+        priority: 'Test' as MyLinkMessagePriority
       }
     ]
 
