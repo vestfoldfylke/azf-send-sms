@@ -6,13 +6,58 @@ import { PayloadSmsMessage } from '../../types/payload-sms-message.js'
 
 import { errorHandling } from '../middleware/error-handling.js'
 import { HTTPError } from '../lib/HTTPError.js'
-import { PayloadSmsMessageValidator } from '../validation/payload-sms-message-validator.js';
+import { PayloadSmsMessageValidator } from '../validation/payload-sms-message-validator.js'
 import { MyLinkSmsMessageValidator } from '../validation/mylink-sms-message-validator.js'
 
-const defaultSender = 'Rumpelo'
+import { config } from '../config.js'
 
 const myLinkSmsMessageValidator = new MyLinkSmsMessageValidator()
 const payloadSmsMessageValidator = new PayloadSmsMessageValidator()
+
+const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, context: InvocationContext): MyLinkSmsMessage[] => {
+  const hasScheduledIn = Number.isInteger(payloadMessage.scheduledIn)
+  const hasScheduledAt = typeof payloadMessage.scheduledAt === 'string'
+
+  return payloadMessage.receivers.map((receiver): MyLinkSmsMessage => {
+    const message: MyLinkSmsMessage = {
+      recipient: receiver,
+      content: {
+        text: payloadMessage.message,
+        options: {
+          "sms.encoding": SmsMessageEncoding.GSM,
+          "sms.obfuscate": SmsMessageObfuscateOptions.ContentAndRecipient,
+          "sms.sender": payloadMessage.sender ?? config.defaultSender
+        }
+      }
+    }
+
+    if (payloadMessage.referenceId) {
+      // TODO: Add a unique referenceId per message (sequence number)
+      message.referenceId = payloadMessage.referenceId
+    }
+
+    if ((hasScheduledAt && hasScheduledIn) || hasScheduledAt) {
+      message.schedule = {
+        absolute: payloadMessage.scheduledAt
+      }
+    }
+
+    if (hasScheduledIn && !hasScheduledAt) {
+      message.schedule = {
+        relative: payloadMessage.scheduledIn
+      }
+    }
+
+    const validationErrors = myLinkSmsMessageValidator.validate(message)
+    if (Object.keys(validationErrors).length !== 0) {
+      logger('error', ['MyLink SMS message validation failed'], context)
+        .catch()
+      throw new HTTPError(400, JSON.stringify(validationErrors))
+    }
+
+    return message
+  })
+}
 
 export async function sendSms(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   const smsData = await request.json() as PayloadSmsMessage
@@ -20,54 +65,14 @@ export async function sendSms(request: HttpRequest, context: InvocationContext):
   const payloadValidationErrors = payloadSmsMessageValidator.validate(smsData)
   if (Object.keys(payloadValidationErrors).length !== 0) {
     logger('error', ['Payload validation failed'], context)
+      .catch()
     throw new HTTPError(400, JSON.stringify(payloadValidationErrors))
   }
   
-  const myLinkSmsData: MyLinkSmsMessage[] = []
-  
-  const hasScheduledIn = Number.isInteger(smsData.scheduledIn)
-  const hasScheduledAt = typeof smsData.scheduledAt === 'string'
-  
-  smsData.receivers.forEach(receiver => {
-    const message: MyLinkSmsMessage = {
-      recipient: receiver,
-      content: {
-        text: smsData.message,
-        options: {
-          "sms.encoding": SmsMessageEncoding.GSM,
-          "sms.obfuscate": SmsMessageObfuscateOptions.ContentAndRecipient,
-          "sms.sender": smsData.sender ?? defaultSender
-        }
-      }
-    }
-    
-    if (smsData.referenceId) {
-      // TODO: Add a unique referenceId per message (sequence number)
-      message.referenceId = smsData.referenceId
-    }
-    
-    if ((hasScheduledAt && hasScheduledIn) || hasScheduledAt) {
-      message.schedule = {
-        absolute: smsData.scheduledAt
-      }
-    }
-    
-    if (hasScheduledIn && !hasScheduledAt) {
-      message.schedule = {
-        relative: smsData.scheduledIn
-      }
-    }
-    
-    const validationErrors = myLinkSmsMessageValidator.validate(message)
-    if (Object.keys(validationErrors).length !== 0) {
-      logger('error', ['MyLink SMS message validation failed'], context)
-      throw new HTTPError(400, JSON.stringify(validationErrors))
-    }
-    
-    myLinkSmsData.push(message)
-  })
+  const myLinkSmsData: MyLinkSmsMessage[] = getMyLinkMessages(smsData, context)
   
   logger('info', [`would send ${myLinkSmsData.length} SMS message(s)`], context)
+    .catch()
   
   return {
     status: 200,
