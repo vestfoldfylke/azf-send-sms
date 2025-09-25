@@ -5,7 +5,7 @@ import { MyLinkScheduledSmsMessageResponse } from '../../types/mylink-scheduled-
 
 import { errorHandling } from '../middleware/error-handling.js'
 import { HTTPError } from '../lib/HTTPError.js'
-import { GetAsync } from "../lib/mylink-caller";
+import { GetAsync } from '../lib/mylink-caller.js'
 
 import { config } from '../config.js'
 
@@ -18,7 +18,7 @@ export async function deleteScheduledMessage(request: HttpRequest, context: Invo
 
   // TODO: We might need to use only messageId or tag, not both at the same time (Time Will Show)
   const url = `${config.myLink.baseUrl}/schedules?messageId=${messageId}&tag=${tag}`
-  logger('info', [`Deleting scheduled message from MyLink API: ${url}`], context)
+  logger('info', [`Deleting scheduled message from MyLink API: ${url}`])
     .catch()
 
   const response = await GetAsync<MyLinkScheduledSmsMessageResponse>(url, context)

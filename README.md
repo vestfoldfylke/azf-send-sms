@@ -63,7 +63,10 @@ Create a `local.settings.json` file:
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "MYLINK_BASEURL": "https://api.linkmobility.com/sms/v1",
-    "DEFAULT_SENDER": "VFK"
+    "MYLINK_TOKENURL": "https://sso.linkmobility.com/auth/realms/CPaaS/protocol/openid-connect/token",
+    "MYLINK_CLIENT_ID": "client-id-generated-in-mylink",
+    "MYLINK_CLIENT_SECRET": "client-secret-generated-in-mylink",
+    "DEFAULT_SENDER": "MyCompany"
   }
 }
 ```

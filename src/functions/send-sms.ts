@@ -5,11 +5,12 @@ import { MyLinkSmsMessage, MyLinkSmsMessageEncoding, MyLinkSmsMessageObfuscateOp
 import { PayloadSmsMessage } from '../../types/payload-sms-message.js'
 import { MyLinkSmsMessageResponse } from '../../types/mylink-sms-message-response'
 
+import { MetricsPrefix, MetricsResultLabelName, MetricsResultFailedLabelValue, MetricsResultSuccessLabelValue } from '../constants.js'
+import { count, countInc } from '@vestfoldfylke/vestfold-metrics'
 import { errorHandling } from '../middleware/error-handling.js'
 import { HTTPError } from '../lib/HTTPError.js'
-import { PayloadSmsMessageValidator } from '../validation/payload-sms-message-validator.js'
 import { MyLinkSmsMessageValidator } from '../validation/mylink-sms-message-validator.js'
-
+import { PayloadSmsMessageValidator } from '../validation/payload-sms-message-validator.js'
 import { PostAsync } from '../lib/mylink-caller.js'
 
 import { config } from '../config.js'
@@ -17,7 +18,9 @@ import { config } from '../config.js'
 const myLinkSmsMessageValidator = new MyLinkSmsMessageValidator()
 const payloadSmsMessageValidator = new PayloadSmsMessageValidator()
 
-const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, context: InvocationContext): MyLinkSmsMessage[] => {
+const MetricsFilePrefix = 'sendSms'
+
+const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, _: InvocationContext): MyLinkSmsMessage[] => {
   const hasScheduledIn = Number.isInteger(payloadMessage.scheduledIn)
   const hasScheduledAt = typeof payloadMessage.scheduledAt === 'string'
 
@@ -53,8 +56,9 @@ const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, context: Invocatio
 
     const validationErrors = myLinkSmsMessageValidator.validate(message)
     if (Object.keys(validationErrors).length !== 0) {
-      logger('error', ['MyLink SMS message validation failed'], context)
+      logger('error', ['MyLink SMS message validation failed'])
         .catch()
+      count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, 'Number of times sendSms endpoint is called', [MetricsResultLabelName, MetricsResultFailedLabelValue])
       throw new HTTPError(400, JSON.stringify(validationErrors))
     }
 
@@ -67,21 +71,29 @@ export async function sendSms(request: HttpRequest, context: InvocationContext):
 
   const payloadValidationErrors = payloadSmsMessageValidator.validate(smsData)
   if (Object.keys(payloadValidationErrors).length !== 0) {
-    logger('error', ['Payload validation failed'], context)
+    logger('error', ['Payload validation failed'])
       .catch()
+    count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, 'Number of times sendSms endpoint is called', [MetricsResultLabelName, MetricsResultFailedLabelValue])
     throw new HTTPError(400, JSON.stringify(payloadValidationErrors))
   }
 
   const myLinkSmsData: MyLinkSmsMessage[] = getMyLinkMessages(smsData, context)
 
-  logger('info', [`would send ${myLinkSmsData.length} SMS message(s)`], context)
+  logger('info', [`would send ${myLinkSmsData.length} SMS message(s)`])
     .catch()
 
-  const response = await PostAsync<MyLinkSmsMessageResponse>(`${config.myLink.baseUrl}/message`, JSON.stringify(myLinkSmsData), context)
+  let success: boolean = false
+  try {
+    const response = await PostAsync<MyLinkSmsMessageResponse>(`${config.myLink.baseUrl}/messages`, JSON.stringify(myLinkSmsData), context)
+    success = true
 
-  return {
-    status: 200,
-    jsonBody: response
+    return {
+      status: 200,
+      jsonBody: response
+    }
+  } finally {
+    count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, 'Number of times sendSms endpoint is called', [MetricsResultLabelName, success ? MetricsResultSuccessLabelValue : MetricsResultFailedLabelValue])
+    countInc(`${MetricsPrefix}_${MetricsFilePrefix}_count`, 'Number of SMS sent to Provider', myLinkSmsData.length, [MetricsResultLabelName, success ? MetricsResultSuccessLabelValue : MetricsResultFailedLabelValue])
   }
 }
 

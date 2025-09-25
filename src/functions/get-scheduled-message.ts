@@ -16,7 +16,7 @@ export async function getScheduledMessage(request: HttpRequest, context: Invocat
   }
 
   const url = `${config.myLink.baseUrl}/schedules/${messageId}`
-  logger('info', [`Fetching scheduled message from MyLink API: ${url}`], context)
+  logger('info', [`Fetching scheduled message from MyLink API: ${url}`])
     .catch()
 
   const response = await GetAsync<MyLinkScheduledSmsMessageResponse>(url, context)
