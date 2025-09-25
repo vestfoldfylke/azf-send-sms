@@ -1,4 +1,5 @@
 import { Validator } from 'fluentvalidation-ts'
+
 import { PayloadSmsMessage } from '../../types/payload-sms-message.js'
 
 export class PayloadSmsMessageValidator extends Validator<PayloadSmsMessage> {

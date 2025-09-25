@@ -1,4 +1,5 @@
 import { Validator } from 'fluentvalidation-ts'
+
 import {
   MyLinkMessageCallback, MyLinkMessageCallbackMode,
   MyLinkMessageExpiration, MyLinkMessagePriority,

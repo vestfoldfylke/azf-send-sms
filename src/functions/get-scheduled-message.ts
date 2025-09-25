@@ -4,8 +4,8 @@ import { logger } from '@vtfk/logger'
 import { MyLinkScheduledSmsMessageResponse } from '../../types/mylink-scheduled-message-response.js'
 
 import { errorHandling } from '../middleware/error-handling.js'
-import { HTTPError } from '../lib/HTTPError.js'
 import { GetAsync } from '../lib/mylink-caller.js'
+import { HTTPError } from '../lib/HTTPError.js'
 
 import { config } from '../config.js'
 

@@ -1,11 +1,11 @@
-import { LRUCache } from 'lru-cache'
 import { count } from '@vestfoldfylke/vestfold-metrics'
 import { logger } from '@vtfk/logger'
+import { LRUCache } from 'lru-cache'
 
+import { MetricsPrefix, MetricsResultLabelName, MetricsResultFailedLabelValue, MetricsResultSuccessLabelValue } from '../constants.js'
 import { HTTPError } from './HTTPError.js'
 
 import { config } from '../config.js'
-import { MetricsPrefix, MetricsResultLabelName, MetricsResultFailedLabelValue, MetricsResultSuccessLabelValue } from '../constants.js'
 
 const cache = new LRUCache<string, string>({
   max: 2,

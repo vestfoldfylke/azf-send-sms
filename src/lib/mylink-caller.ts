@@ -1,10 +1,9 @@
-import { logger } from '@vtfk/logger'
 import { count } from '@vestfoldfylke/vestfold-metrics'
+import { logger } from '@vtfk/logger'
 
-import { MetricsPrefix, MetricsResultLabelName, MetricsResultFailedLabelValue, MetricsResultSuccessLabelValue } from '../constants.js'
-
-import { HTTPError } from './HTTPError.js'
 import { getMyLinkToken } from './get-mylink-token.js'
+import { HTTPError } from './HTTPError.js'
+import { MetricsPrefix, MetricsResultLabelName, MetricsResultFailedLabelValue, MetricsResultSuccessLabelValue } from '../constants.js'
 
 const MetricsFilePrefix = 'myLinkCaller'
 
