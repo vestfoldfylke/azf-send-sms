@@ -12,14 +12,14 @@ POST json to function.
 
 ```json
 {
-  "receivers": ["+4798765432", "+4745678912"],
+  "receivers": ["4798765432", "+4745678912"],
   "message": "<message>",
   "sender": "<name-or-number>",
   "referenceId": "<your-reference-id>"
 }
 ```
 
-> `receivers` - **Required** - must be provided in MSISDN format. Example: +4781549300<br />
+> `receivers` - **Required** - must be provided in MSISDN format. Example: 4798765432 or +4745678912<br />
 > `message` - **Required**<br />
 > `sender` - *Optional* - default is set in environment variable `DEFAULT_SENDER`<br />
 > `referenceId` - *Optional* - your own reference id for tracking<br />
@@ -30,7 +30,7 @@ POST json to function.
 
 ```json
 {
-  "receivers": ["+4798765432", "+4745678912"],
+  "receivers": ["4798765432", "+4745678912"],
   "message": "<message>",
   "sender": "<name-or-number>",
   "referenceId": "<your-reference-id>",
@@ -39,7 +39,7 @@ POST json to function.
 }
 ```
 
-> `receivers` - **Required** - must be provided in MSISDN format. Example: +4781549300<br />
+> `receivers` - **Required** - must be provided in MSISDN format. Example: 4798765432 or +4745678912<br />
 > `message` - **Required**<br />
 > `sender` - *Optional* - default is set in environment variable `DEFAULT_SENDER`<br />
 > `referenceId` - *Optional* - your own reference id for tracking<br />

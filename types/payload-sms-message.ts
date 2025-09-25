@@ -3,8 +3,8 @@
  */
 export type PayloadSmsMessage = {
   /**
-   * List of receivers. Must be provided in MSISDN format. Remember that MSISDN must have a leading (+)<br />
-   * Example: ["+4781549300"]
+   * List of receivers. Must be provided in MSISDN format<br />
+   * Example: ["+4781549300", "4798765432"]
    */
   readonly receivers: string[]
   /**

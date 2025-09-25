@@ -33,13 +33,21 @@ const getMyLinkObfuscation = (): MyLinkSmsMessageObfuscateOptions => {
   }
 }
 
+const getReceiver = (receiver: string): string => {
+  if (receiver.startsWith('+')) {
+    return receiver
+  }
+  
+  return `+${receiver}`
+}
+
 const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, obfuscation: MyLinkSmsMessageObfuscateOptions): MyLinkSmsMessage[] => {
   const hasScheduledIn = Number.isInteger(payloadMessage.scheduledIn)
   const hasScheduledAt = typeof payloadMessage.scheduledAt === 'string'
 
   return payloadMessage.receivers.map((receiver): MyLinkSmsMessage => {
     const message: MyLinkSmsMessage = {
-      recipient: receiver,
+      recipient: getReceiver(receiver),
       content: {
         text: payloadMessage.message,
         options: {
