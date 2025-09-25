@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@azure/functions": "^4.8.0",
+    "@vestfoldfylke/vestfold-metrics": "^1.0.0",
     "@vtfk/logger": "^6.3.4",
     "ajv": "^8.17.1",
     "fluentvalidation-ts": "^5.0.0",
