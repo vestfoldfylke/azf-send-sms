@@ -27,7 +27,7 @@ export async function errorHandling(request: HttpRequest, context: InvocationCon
           .catch()
       }
 
-      return error.toResponse()
+      return error.toResponse(true)
     }
 
     logger('error', [request.method, request.url, 400, error.message, error.stack])

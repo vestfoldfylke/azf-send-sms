@@ -17,19 +17,25 @@ export class HTTPError extends Error {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private getJsonBody(): any {
+  private getJsonBody(includeData: boolean = false): any {
     try {
       return JSON.parse(this.body)
     } catch {
-      return { message: this.body }
+      const data = this.data && includeData
+        ? this.data
+        : undefined
+      return {
+        message: this.body,
+        data
+      }
     }
   }
 
-  toResponse(): HttpResponseInit {
+  toResponse(includeData: boolean = false): HttpResponseInit {
     return {
       headers: { 'Content-Type': 'application/json' },
       status: this.status,
-      jsonBody: this.getJsonBody()
+      jsonBody: this.getJsonBody(includeData)
     }
   }
 }
