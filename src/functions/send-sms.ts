@@ -118,7 +118,7 @@ export async function sendSms(request: HttpRequest, _: InvocationContext): Promi
       jsonBody: response
     }
   } catch (error) {
-    logger('error', [`Failed to send ${myLinkSmsData.length} SMS message(s)`])
+    logger('error', [`Failed to send ${myLinkSmsData.length} SMS message(s)`, JSON.stringify(myLinkSmsData)])
       .catch()
     count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
     countInc(`${MetricsPrefix}_${MetricsFilePrefix}_count`, 'Number of SMS sent to Provider', myLinkSmsData.length, [MetricsResultLabelName, MetricsResultFailedLabelValue])
