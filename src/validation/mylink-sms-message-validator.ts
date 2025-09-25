@@ -100,7 +100,7 @@ class SmsMessageOptionsValidator extends Validator<MyLinkSmsMessageOptions> {
       .when(v => v['sms.obfuscate'] !== undefined && v['sms.obfuscate'] !== null)
       .must(obfuscate => Object.values(MyLinkSmsMessageObfuscateOptions).includes(obfuscate))
       .withMessage(`must be one of: ${Object.values(MyLinkSmsMessageObfuscateOptions).join(', ')}`)
-      .when(v => v !== undefined && v !== null)
+      .when(v => v['sms.obfuscate'] !== undefined && v['sms.obfuscate'] !== null)
   }
 }
 

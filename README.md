@@ -66,10 +66,15 @@ Create a `local.settings.json` file:
     "MYLINK_TOKENURL": "https://sso.linkmobility.com/auth/realms/CPaaS/protocol/openid-connect/token",
     "MYLINK_CLIENT_ID": "client-id-generated-in-mylink",
     "MYLINK_CLIENT_SECRET": "client-secret-generated-in-mylink",
+    "MYLINK_OBFUSCATION": "Content",
     "DEFAULT_SENDER": "MyCompany"
   }
 }
 ```
+
+**MYLINK_OBFUSCATION**<br />
+This setting controls if/how the message is obfuscated in MyLink logs. If not given, the default is `Content`<br />
+Can be one of `None`, `Content` or `ContentAndRecipient`
 
 POST testdata
 

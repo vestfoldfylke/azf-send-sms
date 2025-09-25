@@ -20,6 +20,19 @@ const payloadSmsMessageValidator = new PayloadSmsMessageValidator()
 
 const MetricsFilePrefix = 'sendSms'
 
+const getMyLinkObfuscation = (): MyLinkSmsMessageObfuscateOptions => {
+  switch (config.myLink.obfuscation) {
+    case 'None':
+      return null
+    case 'Content':
+      return MyLinkSmsMessageObfuscateOptions.Content
+    case 'ContentAndRecipient':
+      return MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
+    default:
+      return MyLinkSmsMessageObfuscateOptions.Content
+  }
+}
+
 const getMyLinkMessages = (payloadMessage: PayloadSmsMessage): MyLinkSmsMessage[] => {
   const hasScheduledIn = Number.isInteger(payloadMessage.scheduledIn)
   const hasScheduledAt = typeof payloadMessage.scheduledAt === 'string'
@@ -31,14 +44,17 @@ const getMyLinkMessages = (payloadMessage: PayloadSmsMessage): MyLinkSmsMessage[
         text: payloadMessage.message,
         options: {
           'sms.encoding': MyLinkSmsMessageEncoding.GSM,
-          'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient,
           'sms.sender': payloadMessage.sender ?? config.defaultSender
         }
       }
     }
+    
+    const obfuscation = getMyLinkObfuscation()
+    if (obfuscation) {
+      message.content.options['sms.obfuscate'] = obfuscation
+    }
 
     if (payloadMessage.referenceId) {
-      // TODO: Add a unique referenceId per message (sequence number)
       message.referenceId = payloadMessage.referenceId
     }
 

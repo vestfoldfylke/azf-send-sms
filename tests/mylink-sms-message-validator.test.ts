@@ -36,7 +36,7 @@ describe('MyLinkSmsMessageValidator should not return errors for valid MyLinkSms
           options: {
             'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo 2',
-            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.Content
           }
         },
         expiration: {
@@ -55,8 +55,7 @@ describe('MyLinkSmsMessageValidator should not return errors for valid MyLinkSms
           text: 'Hello, this is a third test message',
           options: {
             'sms.encoding': MyLinkSmsMessageEncoding.GSM,
-            'sms.sender': 'Rumpelo 3',
-            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.sender': 'Rumpelo 3'
           }
         },
         expiration: {
@@ -122,7 +121,7 @@ describe('MyLinkSmsMessageValidator should not return errors for valid MyLinkSms
           options: {
             'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo 2',
-            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.Content
           }
         },
         schedule: {
@@ -174,30 +173,6 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         recipient: '81548300',
         content: {
           text: 'Hello, this is a test message',
-          options: {
-            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
-            'sms.sender': 'Rumpelo',
-            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
-          }
-        }
-      }
-    ]
-
-    for (const message of messages) {
-      const errors = validator.validate(message)
-      // NOTE: This will only validate that there are errors, not the exact number of errors
-      assert.ok(Object.keys(errors).length === 1, `Expected validation errors but got: ${JSON.stringify(errors)}`)
-    }
-
-    assert.ok(true)
-  })
-
-  it('when content.text is empty', () => {
-    const messages: MyLinkSmsMessage[] = [
-      {
-        recipient: '+81548300',
-        content: {
-          text: '',
           options: {
             'sms.encoding': MyLinkSmsMessageEncoding.GSM,
             'sms.sender': 'Rumpelo',
@@ -320,8 +295,7 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
           text: 'Hello, this is a test message',
           options: {
             'sms.encoding': MyLinkSmsMessageEncoding.GSM,
-            'sms.sender': 'hello4567129',
-            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
+            'sms.sender': 'hello4567129'
           }
         }
       }

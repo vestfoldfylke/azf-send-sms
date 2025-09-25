@@ -47,7 +47,7 @@ export type MyLinkSmsMessageOptions = {
   /**
    * Obfuscation allows you to anonymize content and recipient or content only after the message is processed. Non-retrievable
    */
-  'sms.obfuscate': MyLinkSmsMessageObfuscateOptions
+  'sms.obfuscate'?: MyLinkSmsMessageObfuscateOptions
 }
 
 /**
