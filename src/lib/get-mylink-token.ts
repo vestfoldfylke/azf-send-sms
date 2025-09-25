@@ -20,8 +20,6 @@ const MetricsFilePrefix = 'getMyLinkToken'
 export async function getMyLinkToken(): Promise<string> {
   const cacheEntry: string = cache.get(cacheKey)
   if (cacheEntry) {
-    logger('info', ['Using cached MyLink token'])
-      .catch()
     return cacheEntry
   }
   
@@ -48,8 +46,7 @@ export async function getMyLinkToken(): Promise<string> {
   }
   
   const token = await response.json() as { access_token: string, expires_in: number, refresh_expires_in: number, token_type: string, not_before_policy: number, scope: string }
-  const expiresIn = 10 * 1000 // token.expires_in * 1000
-  cache.set(cacheKey, token.access_token, { ttl: expiresIn })
+  cache.set(cacheKey, token.access_token, { ttl: token.expires_in * 1000 })
   count(`${MetricsPrefix}_${MetricsFilePrefix}`, 'Number of MyLink tokens retrieved', [MetricsResultLabelName, MetricsResultSuccessLabelValue])
   logger('info', [`Fetched new MyLink token. Expires in ${token.expires_in} seconds`])
     .catch()
