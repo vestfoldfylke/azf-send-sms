@@ -1,14 +1,14 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
+import { count, countInc } from '@vestfoldfylke/vestfold-metrics'
 import { logger } from '@vtfk/logger'
 
 import { MyLinkSmsMessage, MyLinkSmsMessageEncoding, MyLinkSmsMessageObfuscateOptions } from '../../types/mylink-sms-message.js'
 import { PayloadSmsMessage } from '../../types/payload-sms-message.js'
 import { MyLinkSmsMessageResponse } from '../../types/mylink-sms-message-response'
 
-import { MetricsPrefix, MetricsResultLabelName, MetricsResultFailedLabelValue, MetricsResultSuccessLabelValue } from '../constants.js'
-import { count, countInc } from '@vestfoldfylke/vestfold-metrics'
 import { errorHandling } from '../middleware/error-handling.js'
 import { HTTPError } from '../lib/HTTPError.js'
+import { MetricsPrefix, MetricsResultLabelName, MetricsResultFailedLabelValue, MetricsResultSuccessLabelValue } from '../constants.js'
 import { MyLinkSmsMessageValidator } from '../validation/mylink-sms-message-validator.js'
 import { PayloadSmsMessageValidator } from '../validation/payload-sms-message-validator.js'
 import { PostAsync } from '../lib/mylink-caller.js'
@@ -33,7 +33,7 @@ const getMyLinkObfuscation = (): MyLinkSmsMessageObfuscateOptions => {
   }
 }
 
-const getMyLinkMessages = (payloadMessage: PayloadSmsMessage): MyLinkSmsMessage[] => {
+const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, obfuscation: MyLinkSmsMessageObfuscateOptions): MyLinkSmsMessage[] => {
   const hasScheduledIn = Number.isInteger(payloadMessage.scheduledIn)
   const hasScheduledAt = typeof payloadMessage.scheduledAt === 'string'
 
@@ -48,8 +48,7 @@ const getMyLinkMessages = (payloadMessage: PayloadSmsMessage): MyLinkSmsMessage[
         }
       }
     }
-    
-    const obfuscation = getMyLinkObfuscation()
+
     if (obfuscation) {
       message.content.options['sms.obfuscate'] = obfuscation
     }
@@ -74,7 +73,7 @@ const getMyLinkMessages = (payloadMessage: PayloadSmsMessage): MyLinkSmsMessage[
     if (Object.keys(validationErrors).length !== 0) {
       logger('error', ['MyLink SMS message validation failed'])
         .catch()
-      count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, 'Number of times sendSms endpoint is called', [MetricsResultLabelName, MetricsResultFailedLabelValue])
+      count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultFailedLabelValue])
       throw new HTTPError(400, JSON.stringify(validationErrors))
     }
 
@@ -89,27 +88,34 @@ export async function sendSms(request: HttpRequest, _: InvocationContext): Promi
   if (Object.keys(payloadValidationErrors).length !== 0) {
     logger('error', ['Payload validation failed'])
       .catch()
-    count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, 'Number of times sendSms endpoint is called', [MetricsResultLabelName, MetricsResultFailedLabelValue])
+    count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultFailedLabelValue])
     throw new HTTPError(400, JSON.stringify(payloadValidationErrors))
   }
 
-  const myLinkSmsData: MyLinkSmsMessage[] = getMyLinkMessages(smsData)
+  const obfuscation = getMyLinkObfuscation()
+  const myLinkSmsData: MyLinkSmsMessage[] = getMyLinkMessages(smsData, obfuscation)
 
-  logger('info', [`would send ${myLinkSmsData.length} SMS message(s)`])
+  logger('info', [`Sending ${myLinkSmsData.length} SMS message(s) ${obfuscation ? `with ${obfuscation} obfuscation` : 'without obfuscation'}`])
     .catch()
 
-  let success: boolean = false
   try {
     const response = await PostAsync<MyLinkSmsMessageResponse>(`${config.myLink.baseUrl}/messages`, JSON.stringify(myLinkSmsData))
-    success = true
+    logger('info', [`Sent ${myLinkSmsData.length} SMS message(s)`, JSON.stringify(response.messages)])
+      .catch()
+    count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
+    countInc(`${MetricsPrefix}_${MetricsFilePrefix}_count`, 'Number of SMS sent to Provider', myLinkSmsData.length, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
 
     return {
       status: 200,
       jsonBody: response
     }
-  } finally {
-    count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, 'Number of times sendSms endpoint is called', [MetricsResultLabelName, success ? MetricsResultSuccessLabelValue : MetricsResultFailedLabelValue])
-    countInc(`${MetricsPrefix}_${MetricsFilePrefix}_count`, 'Number of SMS sent to Provider', myLinkSmsData.length, [MetricsResultLabelName, success ? MetricsResultSuccessLabelValue : MetricsResultFailedLabelValue])
+  } catch (error) {
+    logger('error', [`Failed to send ${myLinkSmsData.length} SMS message(s)`])
+      .catch()
+    count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
+    countInc(`${MetricsPrefix}_${MetricsFilePrefix}_count`, 'Number of SMS sent to Provider', myLinkSmsData.length, [MetricsResultLabelName, MetricsResultFailedLabelValue])
+
+    throw error
   }
 }
 

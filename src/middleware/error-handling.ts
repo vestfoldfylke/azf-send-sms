@@ -3,6 +3,7 @@ import 'source-map-support/register.js'
 
 import { HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { logger, logConfig } from '@vtfk/logger'
+
 import { HTTPError } from '../lib/HTTPError.js'
 
 export async function errorHandling(request: HttpRequest, context: InvocationContext, next: (request: HttpRequest, context: InvocationContext) => Promise<HttpResponseInit>): Promise<HttpResponseInit> {
