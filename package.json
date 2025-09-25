@@ -24,7 +24,7 @@
     "url": "https://github.com/runely"
   },
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . && tsc --noEmit --project tsconfig.json",
     "lint:fix": "eslint . --fix",
     "build": "tsc --project tsconfig.json",
     "watch": "tsc -w",

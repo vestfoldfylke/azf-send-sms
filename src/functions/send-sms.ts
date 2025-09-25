@@ -20,7 +20,7 @@ const payloadSmsMessageValidator = new PayloadSmsMessageValidator()
 
 const MetricsFilePrefix = 'sendSms'
 
-const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, _: InvocationContext): MyLinkSmsMessage[] => {
+const getMyLinkMessages = (payloadMessage: PayloadSmsMessage): MyLinkSmsMessage[] => {
   const hasScheduledIn = Number.isInteger(payloadMessage.scheduledIn)
   const hasScheduledAt = typeof payloadMessage.scheduledAt === 'string'
 
@@ -66,7 +66,7 @@ const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, _: InvocationConte
   })
 }
 
-export async function sendSms(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function sendSms(request: HttpRequest, _: InvocationContext): Promise<HttpResponseInit> {
   const smsData = await request.json() as PayloadSmsMessage
 
   const payloadValidationErrors = payloadSmsMessageValidator.validate(smsData)
@@ -77,14 +77,14 @@ export async function sendSms(request: HttpRequest, context: InvocationContext):
     throw new HTTPError(400, JSON.stringify(payloadValidationErrors))
   }
 
-  const myLinkSmsData: MyLinkSmsMessage[] = getMyLinkMessages(smsData, context)
+  const myLinkSmsData: MyLinkSmsMessage[] = getMyLinkMessages(smsData)
 
   logger('info', [`would send ${myLinkSmsData.length} SMS message(s)`])
     .catch()
 
   let success: boolean = false
   try {
-    const response = await PostAsync<MyLinkSmsMessageResponse>(`${config.myLink.baseUrl}/messages`, JSON.stringify(myLinkSmsData), context)
+    const response = await PostAsync<MyLinkSmsMessageResponse>(`${config.myLink.baseUrl}/messages`, JSON.stringify(myLinkSmsData))
     success = true
 
     return {

@@ -9,7 +9,7 @@ import { GetAsync } from '../lib/mylink-caller.js'
 
 import { config } from '../config.js'
 
-export async function deleteScheduledMessage(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function deleteScheduledMessage(request: HttpRequest, _: InvocationContext): Promise<HttpResponseInit> {
   const messageId: string | null = request.query.get('messageId')
   const tag: string | null = request.query.get('tag')
   if (!messageId && !tag) {
@@ -21,7 +21,7 @@ export async function deleteScheduledMessage(request: HttpRequest, context: Invo
   logger('info', [`Deleting scheduled message from MyLink API: ${url}`])
     .catch()
 
-  const response = await GetAsync<MyLinkScheduledSmsMessageResponse>(url, context)
+  const response = await GetAsync<MyLinkScheduledSmsMessageResponse>(url)
 
   return {
     status: 200,

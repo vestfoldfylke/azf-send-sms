@@ -1,5 +1,4 @@
 import { logger } from '@vtfk/logger'
-import { InvocationContext } from '@azure/functions'
 import { count } from '@vestfoldfylke/vestfold-metrics'
 
 import { MetricsPrefix, MetricsResultLabelName, MetricsResultFailedLabelValue, MetricsResultSuccessLabelValue } from '../constants.js'
@@ -17,7 +16,7 @@ const getHeaders = async (): Promise<HeadersInit> => {
   }
 }
 
-export async function GetAsync<T>(url: string, context: InvocationContext): Promise<T> {
+export async function GetAsync<T>(url: string): Promise<T> {
   const headers = await getHeaders()
   const response: Response = await fetch(url, {
     method: 'GET',
@@ -38,7 +37,7 @@ export async function GetAsync<T>(url: string, context: InvocationContext): Prom
   return data
 }
 
-export async function PostAsync<T>(url: string, body: string, context: InvocationContext): Promise<T> {
+export async function PostAsync<T>(url: string, body: string): Promise<T> {
   const headers = await getHeaders()
   const response: Response = await fetch(url, {
     method: 'POST',

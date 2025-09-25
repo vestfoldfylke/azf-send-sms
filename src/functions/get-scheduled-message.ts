@@ -9,7 +9,7 @@ import { GetAsync } from '../lib/mylink-caller.js'
 
 import { config } from '../config.js'
 
-export async function getScheduledMessage(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function getScheduledMessage(request: HttpRequest, _: InvocationContext): Promise<HttpResponseInit> {
   const messageId: string | null = request.params.messageId
   if (!messageId) {
     throw new HTTPError(400, 'Bad Request: Missing messageId in path parameters')
@@ -19,7 +19,7 @@ export async function getScheduledMessage(request: HttpRequest, context: Invocat
   logger('info', [`Fetching scheduled message from MyLink API: ${url}`])
     .catch()
 
-  const response = await GetAsync<MyLinkScheduledSmsMessageResponse>(url, context)
+  const response = await GetAsync<MyLinkScheduledSmsMessageResponse>(url)
 
   return {
     status: 200,

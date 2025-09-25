@@ -47,13 +47,13 @@ const getUrlWithQuery = (params: URLSearchParams): string => {
   return url
 }*/
 
-export async function getScheduledMessages(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function getScheduledMessages(request: HttpRequest, _: InvocationContext): Promise<HttpResponseInit> {
   /*const url = getUrlWithQuery(request.query)*/
   const url = `${config.myLink.baseUrl}/schedules${request.query.size > 0 ? `?${request.query}` : ''}`
   logger('info', [`Fetching scheduled messages from MyLink API: ${url}`])
     .catch()
 
-  const response = await GetAsync<MyLinkScheduledSmsMessageResponse[]>(url, context)
+  const response = await GetAsync<MyLinkScheduledSmsMessageResponse[]>(url)
 
   return {
     status: 200,
