@@ -41,10 +41,20 @@ const getReceiver = (receiver: string): string => {
   return `+${receiver}`
 }
 
-const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, obfuscation: MyLinkSmsMessageObfuscateOptions): MyLinkSmsMessage[] => {
-  const hasScheduledIn = Number.isInteger(payloadMessage.scheduledIn)
-  const hasScheduledAt = typeof payloadMessage.scheduledAt === 'string'
+const getScheduledString = (scheduledIn?: number, scheduledAt?: string): string => {
+  if (typeof scheduledAt === 'string') {
+    return `at ${scheduledAt}`
+  }
 
+  if (Number.isInteger(scheduledIn)) {
+    const scheduledInSeconds = scheduledIn / 1000
+    return `in ${scheduledInSeconds / 60} minutes (${scheduledInSeconds} seconds)`
+  }
+
+  return ''
+}
+
+const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, obfuscation: MyLinkSmsMessageObfuscateOptions, hasScheduledIn: boolean, hasScheduledAt: boolean): MyLinkSmsMessage[] => {
   return payloadMessage.receivers.map((receiver): MyLinkSmsMessage => {
     const message: MyLinkSmsMessage = {
       recipient: getReceiver(receiver),
@@ -100,15 +110,19 @@ export async function sendSms(request: HttpRequest, _: InvocationContext): Promi
     throw new HTTPError(400, JSON.stringify(payloadValidationErrors))
   }
 
+  const hasScheduledIn = Number.isInteger(smsData.scheduledIn)
+  const hasScheduledAt = typeof smsData.scheduledAt === 'string'
+  const scheduledString = getScheduledString(smsData.scheduledIn, smsData.scheduledAt)
   const obfuscation = getMyLinkObfuscation()
-  const myLinkSmsData: MyLinkSmsMessage[] = getMyLinkMessages(smsData, obfuscation)
 
-  logger('info', [`Sending ${myLinkSmsData.length} SMS message(s) ${obfuscation ? `with ${obfuscation} obfuscation` : 'without obfuscation'}`])
+  const myLinkSmsData: MyLinkSmsMessage[] = getMyLinkMessages(smsData, obfuscation, hasScheduledIn, hasScheduledAt)
+
+  logger('info', [`${hasScheduledIn || hasScheduledAt ? 'Scheduling' : 'Sending'} ${myLinkSmsData.length} SMS message(s) ${obfuscation ? `with ${obfuscation} obfuscation` : 'without obfuscation'}${hasScheduledIn || hasScheduledAt ? ` ${scheduledString}` : ''}`])
     .catch()
 
   try {
     const response = await PostAsync<MyLinkSmsMessageResponse>(`${config.myLink.baseUrl}/messages`, JSON.stringify(myLinkSmsData))
-    logger('info', [`Sent ${myLinkSmsData.length} SMS message(s)`, JSON.stringify(response.messages)])
+    logger('info', [`${hasScheduledIn || hasScheduledAt ? 'Scheduled' : 'Sent'} ${myLinkSmsData.length} SMS message(s)${hasScheduledIn || hasScheduledAt ? ` ${scheduledString}` : ''}`, JSON.stringify(response.messages)])
       .catch()
     count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
     countInc(`${MetricsPrefix}_${MetricsFilePrefix}_count`, 'Number of SMS sent to Provider', myLinkSmsData.length, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
@@ -118,7 +132,7 @@ export async function sendSms(request: HttpRequest, _: InvocationContext): Promi
       jsonBody: response
     }
   } catch (error) {
-    logger('error', [`Failed to send ${myLinkSmsData.length} SMS message(s)`, JSON.stringify(myLinkSmsData)])
+    logger('error', [`Failed to ${hasScheduledIn || hasScheduledAt ? 'schedule' : 'send'} ${myLinkSmsData.length} SMS message(s)${hasScheduledIn || hasScheduledAt ? ` ${scheduledString}` : ''}`, JSON.stringify(myLinkSmsData)])
       .catch()
     count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
     countInc(`${MetricsPrefix}_${MetricsFilePrefix}_count`, 'Number of SMS sent to Provider', myLinkSmsData.length, [MetricsResultLabelName, MetricsResultFailedLabelValue])
