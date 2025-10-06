@@ -15,6 +15,7 @@ const MetricsFilePrefix = 'getScheduledMessage'
 
 export async function getScheduledMessage(request: HttpRequest, _: InvocationContext): Promise<HttpResponseInit> {
   const messageId: string | null = request.params.messageId
+
   if (!messageId) {
     count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultFailedLabelValue])
     throw new HTTPError(400, 'Bad Request: Missing messageId in path parameters')
