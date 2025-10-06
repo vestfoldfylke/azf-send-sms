@@ -35,7 +35,8 @@ export default [
         {
           'avoidEscape': true
         }
-      ]
+      ],
+      'no-console': 'error'
     }
   }
 ]
