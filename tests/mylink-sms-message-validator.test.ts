@@ -334,7 +334,7 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
     assert.ok(true)
   })
 
-  it('when schedule.relative is invalid', () => {
+  it('when schedule.relative is below minimum (0)', () => {
     const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
@@ -361,7 +361,7 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
     assert.ok(true)
   })
 
-  it('when schedule.relative is invalid', () => {
+  it('when schedule.relative is below minimum (500_000)', () => {
     const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
@@ -374,7 +374,34 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
           }
         },
         schedule: {
-          relative: 7889232001
+          relative: 500_000
+        }
+      }
+    ]
+
+    for (const message of messages) {
+      const errors = validator.validate(message)
+      // NOTE: This will only validate that there are errors, not the exact number of errors
+      assert.ok(Object.keys(errors).length === 1, `Expected validation errors but got: ${JSON.stringify(errors)}`)
+    }
+
+    assert.ok(true)
+  })
+
+  it('when schedule.relative is above maximum (7_889_232_001)', () => {
+    const messages: MyLinkSmsMessage[] = [
+      {
+        recipient: '+81548300',
+        content: {
+          text: 'Hello, this is a test message',
+          options: {
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
+            'sms.sender': 'Rumpelo',
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
+          }
+        },
+        schedule: {
+          relative: 7_889_232_001
         }
       }
     ]
@@ -429,6 +456,62 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
         },
         schedule: {
           absolute: ''
+        }
+      }
+    ]
+
+    for (const message of messages) {
+      const errors = validator.validate(message)
+      // NOTE: This will only validate that there are errors, not the exact number of errors
+      assert.ok(Object.keys(errors).length === 1, `Expected validation errors but got: ${JSON.stringify(errors)}`)
+    }
+
+    assert.ok(true)
+  })
+
+  it('when schedule.absolute is below minimum (9 minutes)', () => {
+    const futureDate: string = new Date(Date.now() + 9 * 60 * 1000).toISOString()
+    const messages: MyLinkSmsMessage[] = [
+      {
+        recipient: '+81548300',
+        content: {
+          text: 'Hello, this is a test message',
+          options: {
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
+            'sms.sender': 'Rumpelo',
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
+          }
+        },
+        schedule: {
+          absolute: futureDate
+        }
+      }
+    ]
+
+    for (const message of messages) {
+      const errors = validator.validate(message)
+      // NOTE: This will only validate that there are errors, not the exact number of errors
+      assert.ok(Object.keys(errors).length === 1, `Expected validation errors but got: ${JSON.stringify(errors)}`)
+    }
+
+    assert.ok(true)
+  })
+
+  it('when schedule.absolute is above maximum (3 months and 1 minute)', () => {
+    const futureDate: string = new Date(Date.now() + 60_000 + 7_889_232_000).toISOString()
+    const messages: MyLinkSmsMessage[] = [
+      {
+        recipient: '+81548300',
+        content: {
+          text: 'Hello, this is a test message',
+          options: {
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
+            'sms.sender': 'Rumpelo',
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
+          }
+        },
+        schedule: {
+          absolute: futureDate
         }
       }
     ]

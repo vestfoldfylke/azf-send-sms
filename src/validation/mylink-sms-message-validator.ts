@@ -110,9 +110,9 @@ class MessageScheduleValidator extends Validator<MyLinkMessageSchedule> {
     
     this.ruleFor('relative')
       .notNull()
-      .greaterThanOrEqualTo(1)
-      .lessThanOrEqualTo(7889232000)
-      .withMessage('must be between (inclusive) 1 and 7889232000 milliseconds (3 months)')
+      .greaterThanOrEqualTo(600_000) // 10 minutes
+      .lessThanOrEqualTo(7_889_232_000) // 3 months
+      .withMessage('must be between (inclusive) 600_000 milliseconds (10 minutes) and 7_889_232_000 milliseconds (3 months)')
       .when(v => v.absolute === undefined || v.absolute === null)
 
     this.ruleFor('absolute')
@@ -120,6 +120,14 @@ class MessageScheduleValidator extends Validator<MyLinkMessageSchedule> {
       .notEmpty()
       .must(absolute => !isNaN(Date.parse(absolute)))
       .withMessage('must be an ISO8601 formatted date string in UTC')
+      .must(absolute => {
+        const now: number = (new Date()).getTime()
+        const absoluteDate: number = (new Date(absolute)).getTime()
+        const isMinimum10MinInFuture = absoluteDate - now >= 600_000
+        const isMaximum3MonthsInFuture = absoluteDate - now <= 7_889_232_000
+        return isMinimum10MinInFuture && isMaximum3MonthsInFuture
+      })
+      .withMessage('must be between (inclusive) 10 minutes and 3 months in the future')
       .when(v => v.relative === undefined || v.relative === null)
     
     this.ruleFor('tag')
