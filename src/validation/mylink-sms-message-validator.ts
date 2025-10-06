@@ -131,12 +131,12 @@ class MessageScheduleValidator extends Validator<MyLinkMessageSchedule> {
       .when(v => v.relative === undefined || v.relative === null)
     
     this.ruleFor('tag')
-      .minLength(0)
-      .maxLength(100)
-      .withMessage('must be between (inclusive) 0 and 100 characters')
-      .matches(/[a-zA-Z0-9_-]+$/)
+      .minLength(1)
+      .maxLength(79)
+      .withMessage('must be between (inclusive) 0 and 79 characters')
+      .matches(/^[a-zA-Z0-9_-]+$/) // it actually supports more, but this is a safe regex which should be sufficient
       .withMessage('can only contain alphanumeric characters, underscores and hyphens')
-      .when(v => v.tag !== undefined && v.tag !== null && v.tag !== '')
+      .when(v => v.tag !== undefined && v.tag !== null)
   }
 }
 

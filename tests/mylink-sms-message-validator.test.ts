@@ -552,7 +552,7 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
     assert.ok(true)
   })
 
-  it('when schedule.tag is invalid', () => {
+  it('when schedule.tag is invalid (contains illegal characters)', () => {
     const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
@@ -565,8 +565,8 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
           }
         },
         schedule: {
-          relative: 10,
-          tag: 'Dette er en test-tag for rumpelo, som er såpass lang og meningsløs at den uten problemer oppfyller alle krav til både lengde og svada, og samtidig nevner rumpelo eksplisitt for å gjøre testen komplett.'
+          relative: 600_000,
+          tag: 'Påse at væskeinnholdet er ødelagt'
         }
       }
     ]
@@ -580,8 +580,7 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
     assert.ok(true)
   })
 
-  // TODO: Check this live when we have a system that supports it
-  /*it('when schedule.tag is invalid', () => {
+  it('when schedule.tag is an empty string (below minimum length (1))', () => {
     const messages: MyLinkSmsMessage[] = [
       {
         recipient: '+81548300',
@@ -594,21 +593,48 @@ describe('MyLinkSmsMessageValidator should return errors for invalid MyLinkSmsMe
           }
         },
         schedule: {
-          relative: 10,
-          tag: 'Påse at væskeinnholdet er ødelagt'
+          relative: 600_000,
+          tag: ''
         }
       }
     ]
 
     for (const message of messages) {
       const errors = validator.validate(message)
-      console.log(errors)
       // NOTE: This will only validate that there are errors, not the exact number of errors
       assert.ok(Object.keys(errors).length === 1, `Expected validation errors but got: ${JSON.stringify(errors)}`)
     }
 
     assert.ok(true)
-  })*/
+  })
+
+  it('when schedule.tag is above maximum length (79)', () => {
+    const messages: MyLinkSmsMessage[] = [
+      {
+        recipient: '+81548300',
+        content: {
+          text: 'Hello, this is a test message',
+          options: {
+            'sms.encoding': MyLinkSmsMessageEncoding.GSM,
+            'sms.sender': 'Rumpelo',
+            'sms.obfuscate': MyLinkSmsMessageObfuscateOptions.ContentAndRecipient
+          }
+        },
+        schedule: {
+          relative: 600_000,
+          tag: 'Dette-er-en-test-tag-for-rumpelo-som-er-ganske-lang-og-uten_mening_at-den-gir_ingen_mening'
+        }
+      }
+    ]
+
+    for (const message of messages) {
+      const errors = validator.validate(message)
+      // NOTE: This will only validate that there are errors, not the exact number of errors
+      assert.ok(Object.keys(errors).length === 1, `Expected validation errors but got: ${JSON.stringify(errors)}`)
+    }
+
+    assert.ok(true)
+  })
 
   it('when expiration.relative is invalid', () => {
     const messages: MyLinkSmsMessage[] = [
