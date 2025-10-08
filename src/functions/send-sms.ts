@@ -37,7 +37,11 @@ const getReceiver = (receiver: string): string => {
   if (receiver.startsWith('+')) {
     return receiver
   }
-  
+
+  if (receiver.startsWith('00')) {
+    return `+${receiver.slice(2)}`
+  }
+
   return `+${receiver}`
 }
 

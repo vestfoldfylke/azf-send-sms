@@ -11,6 +11,8 @@ export class PayloadSmsMessageValidator extends Validator<PayloadSmsMessage> {
       .withMessage('must contain between 1 and 1000 receivers')
       .must(receivers => receivers.every(r => typeof r === 'string'))
       .withMessage('must be an array of strings only')
+      .must(receivers => receivers.every(r => /(^\+\d{10,11}$)|(^00\d{10,11}$)|(^\d{10,11}$)/.test(r)))
+      .withMessage("all receivers must be in one of the following formats: '{countrycode}{number}', '+{countrycode}{number}', '00{countrycode}{number}'")
     
     this.ruleFor('message')
       .notNull()
