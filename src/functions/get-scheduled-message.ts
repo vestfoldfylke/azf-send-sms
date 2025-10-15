@@ -2,7 +2,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/fu
 import { count } from '@vestfoldfylke/vestfold-metrics'
 import { logger } from '@vtfk/logger'
 
-import { MyLinkScheduledSmsMessageResponse } from '../../types/mylink-scheduled-message-response.js'
+import { MyLinkScheduledSmsMessage } from '../../types/mylink-scheduled-sms-message.js'
 
 import { errorHandling } from '../middleware/error-handling.js'
 import { GetAsync } from '../lib/mylink-caller.js'
@@ -26,7 +26,7 @@ export async function getScheduledMessage(request: HttpRequest, _: InvocationCon
     .catch()
   count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
 
-  const response = await GetAsync<MyLinkScheduledSmsMessageResponse>(url)
+  const response = await GetAsync<MyLinkScheduledSmsMessage>(url)
 
   return {
     status: 200,

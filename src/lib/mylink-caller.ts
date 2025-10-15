@@ -15,6 +15,24 @@ const getHeaders = async (): Promise<HeadersInit> => {
   }
 }
 
+export async function DeleteAsync(url: string): Promise<void> {
+  const headers = await getHeaders()
+  const response: Response = await fetch(url, {
+    method: 'DELETE',
+    headers
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json()
+    count(`${MetricsPrefix}_${MetricsFilePrefix}_DeleteRequest`, 'Number of DELETE requests to MyLink', [MetricsResultLabelName, MetricsResultFailedLabelValue])
+    throw new HTTPError(response.status, `DELETE request to '${url}' failed: ${response.statusText}`, errorData)
+  }
+
+  logger('info', [`DELETE request to '${url}' succeeded`])
+    .catch()
+  count(`${MetricsPrefix}_${MetricsFilePrefix}_DeleteRequest`, 'Number of DELETE requests to MyLink', [MetricsResultLabelName, MetricsResultSuccessLabelValue])
+}
+
 export async function GetAsync<T>(url: string): Promise<T> {
   const headers = await getHeaders()
   const response: Response = await fetch(url, {
