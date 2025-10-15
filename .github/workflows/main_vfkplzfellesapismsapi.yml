@@ -4,9 +4,9 @@
 name: Build and deploy Node.js project to Azure Function App - vfkplzfellesapismsapi
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
+    branches: [main]
   workflow_dispatch:
 
 env:
@@ -15,7 +15,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read #This is required for actions/checkout
 
@@ -47,7 +47,7 @@ jobs:
           path: release.zip
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     permissions:
       id-token: write #This is required for requesting the JWT
@@ -61,7 +61,7 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: |
-          unzip release.zip
+          unzip -o release.zip
           rm release.zip
       
       - name: Login to Azure
