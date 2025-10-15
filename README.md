@@ -54,6 +54,38 @@ POST json to function.
 $ curl https://<api-url>.no/api/SendSms -d "{ "receivers": ["4745678912"], "message": "Do you read me?", "referenceId": "<your-reference-id>", "scheduledAt": "2025-09-19T16:00:00Z" }" -H "Content-Type: application/json" -H "x-functions-key: <your-api-key>" -v
 ```
 
+### Get scheduled SMS messages
+
+GET request to function. Size parameter defaults to 25
+
+```
+$ curl https://<api-url>.no/api/scheduled/messages -H "x-functions-key: <your-api-key>" -v
+```
+
+GET request to function with specified size parameter
+
+```
+$ curl https://<api-url>.no/api/scheduled/messages?size=50 -H "x-functions-key: <your-api-key>" -v
+```
+
+### Get scheduled SMS message by UUID
+
+GET request to function.
+
+```
+$ curl https://<api-url>.no/api/scheduled/messages/{messageId} -H "x-functions-key: <your-api-key>" -v
+```
+
+### Delete scheduled SMS message by UUID
+
+DELETE request to function.
+
+```
+$ curl -X DELETE https://<api-url>.no/api/scheduled/messages/{messageId} -H "x-functions-key: <your-api-key>" -v
+```
+
+Will return 204 No Content if successful.
+
 ## Development
 
 Create a `local.settings.json` file:
