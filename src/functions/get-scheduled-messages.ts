@@ -1,5 +1,4 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { count } from '@vestfoldfylke/vestfold-metrics'
 import { logger } from '@vtfk/logger'
 
 import { MyLinkScheduledSmsMessage } from '../../types/mylink-scheduled-sms-message.js'
@@ -9,15 +8,11 @@ import { errorHandling } from '../middleware/error-handling.js'
 import { GetAsync } from '../lib/mylink-caller.js'
 
 import { config } from '../config.js'
-import { MetricsPrefix, MetricsResultLabelName, MetricsResultSuccessLabelValue } from '../constants.js'
-
-const MetricsFilePrefix = 'getScheduledMessages'
 
 export async function getScheduledMessages(request: HttpRequest, _: InvocationContext): Promise<HttpResponseInit> {
   const url = `${config.myLink.baseUrl}/schedules${request.query.has('size') ? `?size=${request.query.get('size')}` : ''}`
   logger('info', [`Fetching scheduled messages from MyLink API: ${url}`])
     .catch()
-  count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
 
   const messages: MyLinkScheduledSmsMessage[] = []
   let response = await GetAsync<MyLinkScheduledSmsMessagesResponse>(url)

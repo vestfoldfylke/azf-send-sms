@@ -128,7 +128,6 @@ export async function sendSms(request: HttpRequest, _: InvocationContext): Promi
     const response = await PostAsync<MyLinkSmsMessageResponse>(`${config.myLink.baseUrl}/messages`, JSON.stringify(myLinkSmsData))
     logger('info', [`${hasScheduledIn || hasScheduledAt ? 'Scheduled' : 'Sent'} ${myLinkSmsData.length} SMS message(s)${hasScheduledIn || hasScheduledAt ? ` ${scheduledString}` : ''}`, JSON.stringify(response.messages)])
       .catch()
-    count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
     countInc(`${MetricsPrefix}_${MetricsFilePrefix}_count`, 'Number of SMS sent to Provider', myLinkSmsData.length, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
 
     return {
@@ -138,7 +137,6 @@ export async function sendSms(request: HttpRequest, _: InvocationContext): Promi
   } catch (error) {
     logger('error', [`Failed to ${hasScheduledIn || hasScheduledAt ? 'schedule' : 'send'} ${myLinkSmsData.length} SMS message(s)${hasScheduledIn || hasScheduledAt ? ` ${scheduledString}` : ''}`, JSON.stringify(myLinkSmsData)])
       .catch()
-    count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
     countInc(`${MetricsPrefix}_${MetricsFilePrefix}_count`, 'Number of SMS sent to Provider', myLinkSmsData.length, [MetricsResultLabelName, MetricsResultFailedLabelValue])
 
     throw error
