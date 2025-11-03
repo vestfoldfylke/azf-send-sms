@@ -93,9 +93,8 @@ const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, obfuscation: MyLin
 
     const validationErrors = myLinkSmsMessageValidator.validate(message)
     if (Object.keys(validationErrors).length !== 0) {
-      logger.error('MyLink SMS message validation failed')
       count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultFailedLabelValue])
-      throw new HTTPError(400, JSON.stringify(validationErrors))
+      throw new HTTPError(400, 'MyLink SMS message validation failed', validationErrors)
     }
 
     return message
@@ -107,9 +106,8 @@ export async function sendSms(request: HttpRequest, _: InvocationContext): Promi
 
   const payloadValidationErrors = payloadSmsMessageValidator.validate(smsData)
   if (Object.keys(payloadValidationErrors).length !== 0) {
-    logger.error('Payload validation failed')
     count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultFailedLabelValue])
-    throw new HTTPError(400, JSON.stringify(payloadValidationErrors))
+    throw new HTTPError(400, 'Payload validation failed', payloadValidationErrors)
   }
 
   const hasScheduledIn = Number.isInteger(smsData.scheduledIn)
