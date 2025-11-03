@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { logger } from '@vtfk/logger'
+import { logger } from '@vestfoldfylke/loglady'
 
 import { MyLinkScheduledSmsMessage } from '../../types/mylink-scheduled-sms-message.js'
 import { MyLinkScheduledSmsMessagesResponse } from '../../types/mylink-scheduled-sms-messages-response.js'
@@ -11,8 +11,7 @@ import { config } from '../config.js'
 
 export async function getScheduledMessages(request: HttpRequest, _: InvocationContext): Promise<HttpResponseInit> {
   const url = `${config.myLink.baseUrl}/schedules${request.query.has('size') ? `?size=${request.query.get('size')}` : ''}`
-  logger('info', [`Fetching scheduled messages from MyLink API: ${url}`])
-    .catch()
+  logger.info('Fetching scheduled messages from MyLink API: {Url}', url)
 
   const messages: MyLinkScheduledSmsMessage[] = []
   let response = await GetAsync<MyLinkScheduledSmsMessagesResponse>(url)
@@ -21,14 +20,12 @@ export async function getScheduledMessages(request: HttpRequest, _: InvocationCo
     messages.push(...response.items)
 
     const nextPageUrl = `${url}${url.includes('?') ? '&' : '?'}page=${response.currentPage + 1}`
-    logger('info', [`Fetching scheduled messages from MyLink API: ${nextPageUrl}`])
-      .catch()
+    logger.info('Fetching scheduled messages from MyLink API: {NextPageUrl}', nextPageUrl)
     response = await GetAsync<MyLinkScheduledSmsMessagesResponse>(nextPageUrl)
   }
 
   messages.push(...response.items)
-  logger('info', [`Fetched ${messages.length} scheduled messages from MyLink API`])
-    .catch()
+  logger.info('Fetched {MessageCount} scheduled messages from MyLink API', messages.length)
 
   return {
     status: 200,

@@ -1,5 +1,5 @@
 import { count } from '@vestfoldfylke/vestfold-metrics'
-import { logger } from '@vtfk/logger'
+import { logger } from '@vestfoldfylke/loglady'
 import { LRUCache } from 'lru-cache'
 
 import { MyLinkTokenResponse } from '../../types/mylink-token-response'
@@ -24,7 +24,7 @@ export async function getMyLinkToken(): Promise<string> {
   if (cacheEntry) {
     return cacheEntry
   }
-  
+
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded'
   }
@@ -40,19 +40,19 @@ export async function getMyLinkToken(): Promise<string> {
     headers,
     body: new URLSearchParams(body)
   })
-  
+
   if (!response.ok) {
     const errorData = await response.json()
     count(`${MetricsPrefix}_${MetricsFilePrefix}`, 'Number of MyLink tokens retrieved', [MetricsResultLabelName, MetricsResultFailedLabelValue])
     throw new HTTPError(response.status, `Failed to retrieve MyLink token: ${response.statusText}`, errorData)
   }
-  
+
   const token: MyLinkTokenResponse = await response.json()
   const expiresInSeconds = token.expires_in - 60 // Subtract 60 seconds to be safe
   cache.set(cacheKey, token.access_token, { ttl: expiresInSeconds * 1000 })
+
   count(`${MetricsPrefix}_${MetricsFilePrefix}`, 'Number of MyLink tokens retrieved', [MetricsResultLabelName, MetricsResultSuccessLabelValue])
-  logger('info', [`Fetched new MyLink token. Expires in ${expiresInSeconds} seconds`])
-    .catch()
+  logger.info('Fetched new MyLink token. Expires in {ExpiresInSeconds} seconds', expiresInSeconds)
 
   return token.access_token
 }

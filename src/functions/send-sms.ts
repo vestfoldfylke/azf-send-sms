@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { count, countInc } from '@vestfoldfylke/vestfold-metrics'
-import { logger } from '@vtfk/logger'
+import { logger } from '@vestfoldfylke/loglady'
 
 import { MyLinkSmsMessage, MyLinkSmsMessageEncoding, MyLinkSmsMessageObfuscateOptions } from '../../types/mylink-sms-message.js'
 import { PayloadSmsMessage } from '../../types/payload-sms-message.js'
@@ -93,8 +93,7 @@ const getMyLinkMessages = (payloadMessage: PayloadSmsMessage, obfuscation: MyLin
 
     const validationErrors = myLinkSmsMessageValidator.validate(message)
     if (Object.keys(validationErrors).length !== 0) {
-      logger('error', ['MyLink SMS message validation failed'])
-        .catch()
+      logger.error('MyLink SMS message validation failed')
       count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultFailedLabelValue])
       throw new HTTPError(400, JSON.stringify(validationErrors))
     }
@@ -108,8 +107,7 @@ export async function sendSms(request: HttpRequest, _: InvocationContext): Promi
 
   const payloadValidationErrors = payloadSmsMessageValidator.validate(smsData)
   if (Object.keys(payloadValidationErrors).length !== 0) {
-    logger('error', ['Payload validation failed'])
-      .catch()
+    logger.error('Payload validation failed')
     count(`${MetricsPrefix}_${MetricsFilePrefix}_called`, `Number of times ${MetricsFilePrefix} endpoint is called`, [MetricsResultLabelName, MetricsResultFailedLabelValue])
     throw new HTTPError(400, JSON.stringify(payloadValidationErrors))
   }
@@ -118,16 +116,23 @@ export async function sendSms(request: HttpRequest, _: InvocationContext): Promi
   const hasScheduledAt = typeof smsData.scheduledAt === 'string'
   const scheduledString = getScheduledString(smsData.scheduledIn, smsData.scheduledAt)
   const obfuscation = getMyLinkObfuscation()
+  const logScheduledString = hasScheduledIn || hasScheduledAt ? ` ${scheduledString}` : ''
 
   const myLinkSmsData: MyLinkSmsMessage[] = getMyLinkMessages(smsData, obfuscation, hasScheduledIn, hasScheduledAt)
 
-  logger('info', [`${hasScheduledIn || hasScheduledAt ? 'Scheduling' : 'Sending'} ${myLinkSmsData.length} SMS message(s) ${obfuscation ? `with ${obfuscation} obfuscation` : 'without obfuscation'}${hasScheduledIn || hasScheduledAt ? ` ${scheduledString}` : ''}`])
-    .catch()
+  logger.info('{Action} {MessageCount} SMS message(s) {Obfuscation}{ScheduledString}',
+    hasScheduledIn || hasScheduledAt ? 'Scheduling' : 'Sending',
+    myLinkSmsData.length,
+    obfuscation ? `with ${obfuscation} obfuscation` : 'without obfuscation',
+    logScheduledString)
 
   try {
     const response = await PostAsync<MyLinkSmsMessageResponse>(`${config.myLink.baseUrl}/messages`, JSON.stringify(myLinkSmsData))
-    logger('info', [`${hasScheduledIn || hasScheduledAt ? 'Scheduled' : 'Sent'} ${myLinkSmsData.length} SMS message(s)${hasScheduledIn || hasScheduledAt ? ` ${scheduledString}` : ''}`, JSON.stringify(response.messages)])
-      .catch()
+    logger.info('{Action} {MessageCount} SMS message(s){ScheduledString}. Response: {Response}',
+      hasScheduledIn || hasScheduledAt ? 'Scheduled' : 'Sent',
+      myLinkSmsData.length,
+      logScheduledString,
+      JSON.stringify(response.messages))
     countInc(`${MetricsPrefix}_${MetricsFilePrefix}_count`, 'Number of SMS sent to Provider', myLinkSmsData.length, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
 
     return {
@@ -135,8 +140,11 @@ export async function sendSms(request: HttpRequest, _: InvocationContext): Promi
       jsonBody: response
     }
   } catch (error) {
-    logger('error', [`Failed to ${hasScheduledIn || hasScheduledAt ? 'schedule' : 'send'} ${myLinkSmsData.length} SMS message(s)${hasScheduledIn || hasScheduledAt ? ` ${scheduledString}` : ''}`, JSON.stringify(myLinkSmsData)])
-      .catch()
+    logger.errorException(error, 'Failed to {Action} {MessageCount} SMS message(s){ScheduledString}. Payload: {Payload}',
+      hasScheduledIn || hasScheduledAt ? 'schedule' : 'send',
+      myLinkSmsData.length,
+      logScheduledString,
+      JSON.stringify(myLinkSmsData))
     countInc(`${MetricsPrefix}_${MetricsFilePrefix}_count`, 'Number of SMS sent to Provider', myLinkSmsData.length, [MetricsResultLabelName, MetricsResultFailedLabelValue])
 
     throw error

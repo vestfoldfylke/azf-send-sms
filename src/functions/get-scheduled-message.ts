@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { count } from '@vestfoldfylke/vestfold-metrics'
-import { logger } from '@vtfk/logger'
+import { logger } from '@vestfoldfylke/loglady'
 
 import { MyLinkScheduledSmsMessage } from '../../types/mylink-scheduled-sms-message.js'
 
@@ -22,8 +22,7 @@ export async function getScheduledMessage(request: HttpRequest, _: InvocationCon
   }
 
   const url = `${config.myLink.baseUrl}/schedules/${messageId}`
-  logger('info', [`Fetching scheduled message from MyLink API: ${url}`])
-    .catch()
+  logger.info('Fetching scheduled message from MyLink API: {Url}', url)
 
   const response = await GetAsync<MyLinkScheduledSmsMessage>(url)
 

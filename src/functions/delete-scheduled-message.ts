@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
 import { count } from '@vestfoldfylke/vestfold-metrics'
-import { logger } from '@vtfk/logger'
+import { logger } from '@vestfoldfylke/loglady'
 
 import { errorHandling } from '../middleware/error-handling.js'
 import { DeleteAsync } from '../lib/mylink-caller.js'
@@ -21,8 +21,7 @@ export async function deleteScheduledMessage(request: HttpRequest, _: Invocation
   }
 
   const url = `${config.myLink.baseUrl}/schedules?${request.query}`
-  logger('info', [`Deleting scheduled message from MyLink API: ${url}`])
-    .catch()
+  logger.info('Deleting scheduled message from MyLink API: {Url}', url)
 
   await DeleteAsync(url)
 
