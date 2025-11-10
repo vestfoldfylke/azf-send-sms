@@ -1,37 +1,54 @@
 // This line is necessary to enable source map support for better error stack traces in Node.js
-import 'source-map-support/register.js'
+import "source-map-support/register.js";
 
-import { count } from '@vestfoldfylke/vestfold-metrics'
-import { HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { logger } from '@vestfoldfylke/loglady'
+import type { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { HTTPError } from '../lib/HTTPError.js'
-import { MetricsPrefix, MetricsResultFailedLabelValue, MetricsResultLabelName, MetricsResultSuccessLabelValue } from '../constants.js'
+import { logger } from "@vestfoldfylke/loglady";
+import { count } from "@vestfoldfylke/vestfold-metrics";
+import { MetricsPrefix, MetricsResultFailedLabelValue, MetricsResultLabelName, MetricsResultSuccessLabelValue } from "../constants.js";
+import { HTTPError } from "../lib/HTTPError.js";
 
-export async function errorHandling(request: HttpRequest, context: InvocationContext, next: (request: HttpRequest, context: InvocationContext) => Promise<HttpResponseInit>): Promise<HttpResponseInit> {
+export async function errorHandling(
+  request: HttpRequest,
+  context: InvocationContext,
+  next: (request: HttpRequest, context: InvocationContext) => Promise<HttpResponseInit>
+): Promise<HttpResponseInit> {
   try {
     logger.logConfig({
       contextId: context.invocationId
-    })
+    });
 
-    const result = await next(request, context)
-    count(`${MetricsPrefix}_${next.name}_called`, `Number of times ${next.name} endpoint is called`, [MetricsResultLabelName, MetricsResultSuccessLabelValue])
+    const result: HttpResponseInit = await next(request, context);
+    count(`${MetricsPrefix}_${next.name}_called`, `Number of times ${next.name} endpoint is called`, [
+      MetricsResultLabelName,
+      MetricsResultSuccessLabelValue
+    ]);
 
-    return result
+    return result;
   } catch (error) {
-    count(`${MetricsPrefix}_${next.name}_called`, `Number of times ${next.name} endpoint is called`, [MetricsResultLabelName, MetricsResultFailedLabelValue])
+    count(`${MetricsPrefix}_${next.name}_called`, `Number of times ${next.name} endpoint is called`, [
+      MetricsResultLabelName,
+      MetricsResultFailedLabelValue
+    ]);
 
     if (error instanceof HTTPError) {
-      logger.errorException(error, 'Error on {Method} to {Url} with status {Status}. Data: {@Data}', request.method, request.url, error.status, error.data)
-      return error.toResponse(true)
+      logger.errorException(
+        error,
+        "Error on {Method} to {Url} with status {Status}. Data: {@Data}",
+        request.method,
+        request.url,
+        error.status,
+        error.data
+      );
+      return error.toResponse(true);
     }
 
-    logger.errorException(error, 'Error on {Method} to {Url} with status {Status}', request.method, request.url, 400)
+    logger.errorException(error, "Error on {Method} to {Url} with status {Status}", request.method, request.url, 400);
     return {
       status: 400,
       body: error.message
-    }
+    };
   } finally {
-    await logger.flush()
+    await logger.flush();
   }
 }

@@ -1,41 +1,63 @@
-import { HttpResponseInit } from '@azure/functions'
+import type { HttpResponseInit } from "@azure/functions";
 
 export class HTTPError extends Error {
-  public status: number
-  public body: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public data?: any
+  public readonly status: number;
+  public readonly body: string;
+  public readonly data?: string;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(status: number, message: string, data?: any) {
-    super(message)
+  /**
+   *
+   * @param status - HTTP status code
+   * @param message - Error message
+   * @param data - Optional additional data (stringified JSON)
+   */
+  constructor(status: number, message: string, data?: string) {
+    super(message);
 
-    this.status = status
-    this.body = message
-    this.data = data
-    this.name = 'HTTPError'
+    this.status = status;
+    this.body = message;
+    this.data = data;
+    this.name = "HTTPError";
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private getJsonBody(includeData: boolean = false): any {
+  private getBody(): string | unknown {
     try {
-      return JSON.parse(this.body)
+      return JSON.parse(this.body);
     } catch {
-      const data = this.data && includeData
-        ? this.data
-        : undefined
-      return {
-        message: this.body,
-        data
-      }
+      return this.body;
     }
+  }
+
+  private getData(): unknown | undefined {
+    if (!this.data) {
+      return undefined;
+    }
+
+    try {
+      return JSON.parse(this.data);
+    } catch {
+      return this.data;
+    }
+  }
+
+  private getJsonBody(includeData: boolean = false): unknown {
+    if (includeData && this.data) {
+      return {
+        body: this.getBody(),
+        data: this.getData()
+      };
+    }
+
+    return {
+      body: this.getBody()
+    };
   }
 
   toResponse(includeData: boolean = false): HttpResponseInit {
     return {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
       status: this.status,
       jsonBody: this.getJsonBody(includeData)
-    }
+    };
   }
 }
