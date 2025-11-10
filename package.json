@@ -34,7 +34,7 @@
     "test": "npm run lint && node --import tsx --test tests/**/*.test.ts"
   },
   "dependencies": {
-    "@azure/functions": "^4.8.0",
+    "@azure/functions": "^4.9.0",
     "@vestfoldfylke/loglady": "^1.1.1",
     "@vestfoldfylke/vestfold-metrics": "^1.0.0",
     "fluentvalidation-ts": "^5.0.0",
