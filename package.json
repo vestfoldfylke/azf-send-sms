@@ -1,12 +1,8 @@
 {
   "name": "azf-send-sms",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "HttpTriggered SMS sending with MyLink",
-  "keywords": [
-    "azure",
-    "sms",
-    "pswincom"
-  ],
+  "keywords": ["azure", "sms", "mylink"],
   "type": "module",
   "main": "dist/src/functions/*.js",
   "homepage": "https://github.com/vestfoldfylke/azf-send-sms#readme",
@@ -24,8 +20,8 @@
     "url": "https://github.com/runely"
   },
   "scripts": {
-    "lint": "eslint . && tsc --noEmit --project tsconfig.json",
-    "lint:fix": "eslint . --fix",
+    "lint": "biome check && tsc --noEmit --project tsconfig.json",
+    "lint:fix": "biome check --write",
     "build": "tsc --project tsconfig.json",
     "watch": "tsc -w",
     "clean": "rm -rf dist",
@@ -34,18 +30,16 @@
     "test": "npm run lint && node --import tsx --test tests/**/*.test.ts"
   },
   "dependencies": {
-    "@azure/functions": "^4.8.0",
+    "@azure/functions": "^4.9.0",
+    "@vestfoldfylke/loglady": "^1.1.1",
     "@vestfoldfylke/vestfold-metrics": "^1.0.0",
-    "@vtfk/logger": "^6.4.2",
     "fluentvalidation-ts": "^5.0.0",
     "lru-cache": "^11.2.2",
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
-    "@types/node": "^24.7.2",
-    "@typescript-eslint/eslint-plugin": "^8.46.1",
-    "@typescript-eslint/parser": "^8.46.1",
-    "eslint": "^9.37.0",
+    "@biomejs/biome": "2.3.4",
+    "@types/node": "^24.10.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   }
