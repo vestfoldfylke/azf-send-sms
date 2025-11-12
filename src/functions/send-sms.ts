@@ -10,6 +10,7 @@ import { config } from "../config.js";
 import { MetricsPrefix, MetricsResultFailedLabelValue, MetricsResultLabelName, MetricsResultSuccessLabelValue } from "../constants.js";
 import { HTTPError } from "../lib/HTTPError.js";
 import { PostAsync } from "../lib/mylink-caller.js";
+import { updateContext } from "../middleware/async-local-context.js";
 import { errorHandling } from "../middleware/error-handling.js";
 import { MyLinkSmsMessageValidator } from "../validation/mylink-sms-message-validator.js";
 import { PayloadSmsMessageValidator } from "../validation/payload-sms-message-validator.js";
@@ -108,7 +109,7 @@ const getMyLinkMessages = (
   });
 };
 
-export async function sendSms(request: HttpRequest, _: InvocationContext): Promise<HttpResponseInit> {
+export async function sendSms(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   const smsData = (await request.json()) as PayloadSmsMessage;
 
   const payloadValidationErrors = payloadSmsMessageValidator.validate(smsData);
@@ -118,6 +119,12 @@ export async function sendSms(request: HttpRequest, _: InvocationContext): Promi
       MetricsResultFailedLabelValue
     ]);
     throw new HTTPError(400, "Payload validation failed", JSON.stringify(payloadValidationErrors));
+  }
+
+  if (smsData.referenceId) {
+    updateContext({
+      contextId: `${context.invocationId} - ${smsData.referenceId}`
+    });
   }
 
   const hasScheduledIn = Number.isInteger(smsData.scheduledIn);

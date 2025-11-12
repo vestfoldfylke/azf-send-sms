@@ -1,4 +1,5 @@
-![ESLint Badge](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=fff&style=flat-square)
+![ts](https://badgen.net/badge/Built%20With/TypeScript/blue)
+[![Formatted with Biome](https://img.shields.io/badge/Formatted_and_Linted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev/)
 
 # azf-send-sms
 
