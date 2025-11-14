@@ -5,7 +5,7 @@ import type { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 
 import { logger } from "@vestfoldfylke/loglady";
 
-import type { LogConfig } from "@vestfoldfylke/loglady/dist/types/log-config.types";
+import type { LogConfig } from "@vestfoldfylke/loglady/dist/types/types/log-config.types";
 
 import { count } from "@vestfoldfylke/vestfold-metrics";
 import { MetricsPrefix, MetricsResultFailedLabelValue, MetricsResultLabelName, MetricsResultSuccessLabelValue } from "../constants.js";
