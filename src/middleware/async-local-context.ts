@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { logger } from "@vestfoldfylke/loglady";
 
-import type { LogConfig } from "@vestfoldfylke/loglady/dist/types/log-config.types";
+import type { LogConfig } from "@vestfoldfylke/loglady/dist/types/types/log-config.types";
 
 const asyncLocalStorage = new AsyncLocalStorage<LogConfig>();
 

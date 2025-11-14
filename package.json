@@ -2,7 +2,11 @@
   "name": "azf-send-sms",
   "version": "2.1.1",
   "description": "HttpTriggered SMS sending with MyLink",
-  "keywords": ["azure", "sms", "mylink"],
+  "keywords": [
+    "azure",
+    "sms",
+    "mylink"
+  ],
   "type": "module",
   "main": "dist/src/functions/*.js",
   "homepage": "https://github.com/vestfoldfylke/azf-send-sms#readme",
@@ -31,7 +35,7 @@
   },
   "dependencies": {
     "@azure/functions": "^4.9.0",
-    "@vestfoldfylke/loglady": "^1.2.0",
+    "@vestfoldfylke/loglady": "^1.3.0",
     "@vestfoldfylke/vestfold-metrics": "^1.0.0",
     "fluentvalidation-ts": "^5.0.0",
     "lru-cache": "^11.2.2",
