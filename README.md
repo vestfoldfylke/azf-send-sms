@@ -9,7 +9,7 @@ HttpTriggered sending of SMS with [MyLink / LinkMobility](https://www.linkmobili
 
 ### Send SMS immediately
 
-POST json to function.
+POST JSON to function.
 
 ```json
 {
@@ -22,12 +22,12 @@ POST json to function.
 
 > `receivers` - **Required** - must be provided in MSISDN format. Example: 4798765432 or +4745678912<br />
 > `message` - **Required**<br />
+> `referenceId` - **Required** - your own reference id for tracking<br />
 > `sender` - *Optional* - default is set in environment variable `DEFAULT_SENDER`<br />
-> `referenceId` - *Optional* - your own reference id for tracking<br />
 
 ### Send SMS scheduled in the future
 
-POST json to function.
+POST JSON to function.
 
 ```json
 {
@@ -42,8 +42,8 @@ POST json to function.
 
 > `receivers` - **Required** - must be provided in MSISDN format. Example: 4798765432 or +4745678912<br />
 > `message` - **Required**<br />
+> `referenceId` - **Required** - your own reference id for tracking<br />
 > `sender` - *Optional* - default is set in environment variable `DEFAULT_SENDER`<br />
-> `referenceId` - *Optional* - your own reference id for tracking<br />
 > `scheduledIn` - *Optional* - milliseconds in the future to schedule the SMS - Min: 600_000 ms (10 minutes). Max: 7_889_232_000 ms (3 months)<br />
 > `scheduledAt` - *Optional* - ISO8601 date time string in UTC to schedule the SMS - Min: 10 minutes in the future. Max: 3 months in the future<br />
 

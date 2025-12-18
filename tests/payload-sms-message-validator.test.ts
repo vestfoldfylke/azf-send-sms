@@ -11,7 +11,8 @@ describe("PayloadSmsMessageValidator should not return errors for valid PayloadS
   it("when receiver format is {countrycode}{number}, +{countrycode}{number} and 00{countrycode}{number}", () => {
     const message: PayloadSmsMessage = {
       receivers: ["4781549300", "+4781549300", "004781549300"],
-      message: "Hello, this is a test message"
+      message: "Hello, this is a test message",
+      referenceId: "ref-12345"
     };
 
     const errors = validator.validate(message);
@@ -23,7 +24,29 @@ describe("PayloadSmsMessageValidator should return errors for invalid PayloadSms
   it("when receiver format is {number} and +{number}", () => {
     const message: PayloadSmsMessage = {
       receivers: ["81549300", "+81549300"],
+      message: "Hello, this is a test message",
+      referenceId: "ref-12345"
+    };
+
+    const errors = validator.validate(message);
+    assert.ok(Object.keys(errors).length === 1, `Expected validation errors, but got: ${JSON.stringify(errors)}`);
+  });
+
+  it("when referenceId is null", () => {
+    const message: PayloadSmsMessage = {
+      receivers: ["4781549300", "+4781549300", "004781549300"],
       message: "Hello, this is a test message"
+    };
+
+    const errors = validator.validate(message);
+    assert.ok(Object.keys(errors).length === 1, `Expected validation errors, but got: ${JSON.stringify(errors)}`);
+  });
+
+  it("when referenceId is an empty string", () => {
+    const message: PayloadSmsMessage = {
+      receivers: ["4781549300", "+4781549300", "004781549300"],
+      message: "Hello, this is a test message",
+      referenceId: ""
     };
 
     const errors = validator.validate(message);
