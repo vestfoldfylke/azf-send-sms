@@ -19,5 +19,6 @@ export class PayloadSmsMessageValidator extends Validator<PayloadSmsMessage> {
       );
 
     this.ruleFor("message").notNull().notEmpty().withMessage("must be a non-empty string");
+    this.ruleFor("referenceId").notNull().notEmpty().withMessage("must be a non-empty string");
   }
 }
