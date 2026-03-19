@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@azure/functions": "^4.9.0",
-    "@vestfoldfylke/loglady": "^1.3.0",
+    "@vestfoldfylke/loglady": "^1.5.2",
     "@vestfoldfylke/vestfold-metrics": "^1.0.0",
     "fluentvalidation-ts": "^5.0.0",
     "lru-cache": "^11.2.2",
