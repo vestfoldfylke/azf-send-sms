@@ -34,17 +34,17 @@
     "test": "npm run lint && node --import tsx --test tests/**/*.test.ts"
   },
   "dependencies": {
-    "@azure/functions": "^4.12.0",
-    "@vestfoldfylke/loglady": "^1.5.2",
-    "@vestfoldfylke/vestfold-metrics": "^1.0.0",
+    "@azure/functions": "^4.15.0",
+    "@vestfoldfylke/loglady": "^2.0.0",
+    "@vestfoldfylke/vestfold-metrics": "^1.0.1",
     "fluentvalidation-ts": "^5.0.0",
-    "lru-cache": "^11.2.7",
+    "lru-cache": "^11.5.0",
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.8",
-    "@types/node": "^25.5.0",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "@biomejs/biome": "2.4.15",
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3"
   }
 }
