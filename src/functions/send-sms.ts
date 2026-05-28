@@ -3,7 +3,7 @@ import { logger } from "@vestfoldfylke/loglady";
 import { count, countInc } from "@vestfoldfylke/vestfold-metrics";
 
 import { type MyLinkSmsMessage, MyLinkSmsMessageEncoding, MyLinkSmsMessageObfuscateOptions } from "../../types/mylink-sms-message.js";
-import type { MyLinkSmsMessageResponse } from "../../types/mylink-sms-message-response";
+import type { MyLinkSmsMessageResponse } from "../../types/mylink-sms-message-response.js";
 import type { PayloadSmsMessage } from "../../types/payload-sms-message.js";
 
 import { config } from "../config.js";

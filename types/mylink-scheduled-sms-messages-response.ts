@@ -1,4 +1,4 @@
-import type { MyLinkScheduledSmsMessage } from "./mylink-scheduled-sms-message";
+import type { MyLinkScheduledSmsMessage } from "./mylink-scheduled-sms-message.js";
 
 /**
  * Represents a paginated response containing scheduled SMS messages
