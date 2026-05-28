@@ -3,9 +3,7 @@ import "source-map-support/register.js";
 
 import type { HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-import { logger } from "@vestfoldfylke/loglady";
-
-import type { LogConfig } from "@vestfoldfylke/loglady/dist/types/types/log-config.types";
+import { type LogConfig, logger } from "@vestfoldfylke/loglady";
 
 import { count } from "@vestfoldfylke/vestfold-metrics";
 import { MetricsPrefix, MetricsResultFailedLabelValue, MetricsResultLabelName, MetricsResultSuccessLabelValue } from "../constants.js";
