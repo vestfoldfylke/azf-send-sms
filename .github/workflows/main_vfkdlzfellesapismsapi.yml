@@ -21,6 +21,7 @@ jobs:
       node_version: 22 # this one is optional and defaults to 22 if not set
 
   build:
+    needs: call-security
     runs-on: self-hosted
     permissions:
       contents: read #This is required for actions/checkout
