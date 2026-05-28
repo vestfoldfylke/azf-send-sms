@@ -2,7 +2,7 @@ import { logger } from "@vestfoldfylke/loglady";
 import { count } from "@vestfoldfylke/vestfold-metrics";
 import { LRUCache } from "lru-cache";
 
-import type { MyLinkTokenResponse } from "../../types/mylink-token-response";
+import type { MyLinkTokenResponse } from "../../types/mylink-token-response.js";
 
 import { config } from "../config.js";
 import { MetricsPrefix, MetricsResultFailedLabelValue, MetricsResultLabelName, MetricsResultSuccessLabelValue } from "../constants.js";

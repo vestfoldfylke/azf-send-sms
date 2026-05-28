@@ -1,14 +1,14 @@
 import assert from "node:assert";
 import { describe, it } from "node:test";
 
-import { MyLinkSmsMessageValidator } from "../src/validation/mylink-sms-message-validator";
+import { MyLinkSmsMessageValidator } from "../src/validation/mylink-sms-message-validator.js";
 import {
   MyLinkMessageCallbackMode,
   MyLinkMessagePriority,
   type MyLinkSmsMessage,
   MyLinkSmsMessageEncoding,
   MyLinkSmsMessageObfuscateOptions
-} from "../types/mylink-sms-message";
+} from "../types/mylink-sms-message.js";
 
 const validator = new MyLinkSmsMessageValidator();
 

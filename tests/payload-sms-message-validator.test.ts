@@ -1,9 +1,9 @@
 import assert from "node:assert";
 import { describe, it } from "node:test";
 
-import { PayloadSmsMessageValidator } from "../src/validation/payload-sms-message-validator";
+import { PayloadSmsMessageValidator } from "../src/validation/payload-sms-message-validator.js";
 
-import type { PayloadSmsMessage } from "../types/payload-sms-message";
+import type { PayloadSmsMessage } from "../types/payload-sms-message.js";
 
 const validator = new PayloadSmsMessageValidator();
 
