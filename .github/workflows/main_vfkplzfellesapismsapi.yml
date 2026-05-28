@@ -6,7 +6,6 @@ name: Build and deploy Node.js project to Azure Function App - vfkplzfellesapism
 on:
   release:
     types: [published]
-    branches: [main]
   workflow_dispatch:
 
 env:
@@ -15,12 +14,14 @@ env:
 
 jobs:
   call-security:
+    if: github.event.release.target_commitish == 'main' # Only run this workflow if the release is created from the main branch
     uses: vestfoldfylke/shared/.github/workflows/npm-security.yml@main
     with:
       audit_severity: "high" # required to be set. Can be one of (null, info, low, moderate, high, critical, none)
       node_version: 22 # this one is optional and defaults to 22 if not set
 
   build:
+    needs: call-security
     runs-on: self-hosted
     permissions:
       contents: read #This is required for actions/checkout
