@@ -1,6 +1,6 @@
 {
   "name": "azf-send-sms",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "HttpTriggered SMS sending with MyLink",
   "keywords": [
     "azure",
