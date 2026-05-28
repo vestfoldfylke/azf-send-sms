@@ -14,7 +14,9 @@ env:
 
 jobs:
   call-security:
-    if: github.event.release.target_commitish == 'main' # Only run this workflow if the release is created from the main branch
+    if: |
+      github.event_name == 'workflow_dispatch' || 
+      (github.event_name == 'release' && github.event.release.target_commitish == 'main')
     uses: vestfoldfylke/shared/.github/workflows/npm-security.yml@main
     with:
       audit_severity: "high" # required to be set. Can be one of (null, info, low, moderate, high, critical, none)
