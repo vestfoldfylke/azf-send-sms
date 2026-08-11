@@ -1,6 +1,6 @@
 {
   "name": "azf-send-sms",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "HttpTriggered SMS sending with MyLink",
   "keywords": [
     "azure",
@@ -34,17 +34,17 @@
     "test": "npm run lint && node --import tsx --test tests/**/*.test.ts"
   },
   "dependencies": {
-    "@azure/functions": "^4.15.0",
-    "@vestfoldfylke/loglady": "^2.0.0",
+    "@azure/functions": "^4.16.2",
+    "@vestfoldfylke/loglady": "^2.1.0",
     "@vestfoldfylke/vestfold-metrics": "^1.0.1",
     "fluentvalidation-ts": "^5.0.0",
-    "lru-cache": "^11.5.0",
+    "lru-cache": "^11.5.2",
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.15",
-    "@types/node": "^25.9.1",
-    "tsx": "^4.22.3",
-    "typescript": "^6.0.3"
+    "@biomejs/biome": "2.5.6",
+    "@types/node": "^26.1.2",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
   }
 }
